@@ -27,4 +27,13 @@ export const DEFAULTS = {
   PRIMARY_SALE: null,
 
   METADATA_PROGRAM_ID: 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
+
+  // Discord bot secret
+  DISCORD_BOT_TOKEN: 'FILL IN',
+  
+  // The discord channel to notify
+  SUBSCRIPTION_DISCORD_CHANNEL_ID: 'FILL IN',
+  
+  // Mint address to watch for sales TODO: switch 
+  SUBSCRIPTION_MINT_ADDRESS: '9px36ZsECEdSbNAobezC77Wr9BfACenRN1W8X7AUuWAb',
 };
