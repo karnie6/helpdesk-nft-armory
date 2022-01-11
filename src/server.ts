@@ -1,11 +1,13 @@
 import { Worker } from "./composables/workers/types";
 import notifyNFTSalesWorker from './composables/workers/notifyNFTSalesWorker';
-
+import {ref } from 'vue';
 import {
     initClient as initDiscordClient,
   } from './composables/discord';
 import { loadConfig } from "./composables/configs/config";
 import initWorkers from "./composables/workers/initWorkers";
+
+
 
 (async () => {
   console.log("Trying to run")  

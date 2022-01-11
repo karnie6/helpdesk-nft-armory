@@ -135,10 +135,27 @@ export default function usePinata() {
        preprocess retrieved metadata by saving as PNFT objects
     */
 
-    const pinata_results = await searchForOpenTickets()
-    const pnfts = (await convertTicketsToPNFTs(pinata_results))
+    const pinata_result_rows = (await retrieveOpenTicketsResultRows())
+    const pnfts = (await convertTicketsToPNFTs(pinata_result_rows))
     return pnfts
   };
+
+  const retrieveOpenTicketsResultCount = async() => {
+    /* Search Pinata account for open NTF tickets and return count
+    */
+    const pinata_result = (await searchForOpenTickets())
+    console.log("pinata result is", pinata_result)
+    return pinata_result.count
+  }
+
+  const retrieveOpenTicketsResultRows =  async() => {
+    /* Search Pinata account for open NTF tickets using metadata filter
+       & return result rows
+    */
+    const pinata_result = (await searchForOpenTickets())
+    return pinata_result.rows
+  };
+
 
   const searchForOpenTickets =  async() => {
     /* Search Pinata account for open NTF tickets using metadata filter
@@ -166,8 +183,8 @@ export default function usePinata() {
         metadata: metadataFilter
     };
 
-    const res = (await pinata.pinList(filters))
-    return res.rows
+    const pinata_result = (await pinata.pinList(filters))
+    return pinata_result
   };
 
   async function convertTicketsToPNFTs(tokens: PinataPinListResponseRow[]): Promise<PNFT[]> {
@@ -208,7 +225,9 @@ export default function usePinata() {
     searchForOpenTickets,
     updatePinataMetadata,
     convertTicketsToPNFTs,
-    retrieveOpenTickets
+    retrieveOpenTickets,
+    retrieveOpenTicketsResultCount,
+    retrieveOpenTicketsResultRows
   };
 }
 

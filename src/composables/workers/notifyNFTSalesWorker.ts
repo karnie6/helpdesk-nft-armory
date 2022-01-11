@@ -3,7 +3,9 @@ import {ref } from 'vue';
 import { Worker } from "../workers/types";
 import {PNFT} from '../../common/helpers/types';
 import { fetchDiscordChannel } from "../discord";
+import notifyDiscordSale from "../discord/notifyDiscordSale"
 import usePinata from "../pinata";
+
 export interface Project {
     mintAddress: string;
     discordChannelId: string;
@@ -16,9 +18,11 @@ export default function newWorker(
   ): Worker {
     const timestamp = Date.now();
     let notifyAfter = new Date(timestamp);
+
+    const {retrieveOpenTickets} = usePinata();
   
-    const { retrieveOpenTickets} = usePinata();
-  
+    let initialTickets: number = 0;
+
     const allPinataTickets = ref<PNFT[]>([]); // this is everything fetched in mem
   
     console.log("Worker func called");
@@ -32,6 +36,7 @@ export default function newWorker(
           console.log("No pinata tickets found")
         }
       });
+  
   
   
       return {
@@ -49,32 +54,15 @@ export default function newWorker(
           if (!channel) {
             return;
           }
-    
-          if (!discordClient.isReady()) {
+          if (allPinataTickets.value.length <= initialTickets){
+            console.log("no new tickets detected - New Tickets: ", allPinataTickets.value.length , " Old Tickets: ", initialTickets)
             return;
           }
-        
-          const description = `HELPDESK TEST MESSAGE`;
-        
-          const embedMsg = new MessageEmbed({
-            color: "#0099ff",
-            title: "TEST",
-            description,
-    
-          });
-    
-          
-          await channel.send({
-            embeds: [embedMsg],
-          });
-          const logMsg = `Notified discord #${channel.name}: ${description}`;
-          console.log(logMsg);
-        
+          console.log("ASYNC EXECUTION ##########")
+          console.log("New Tickets: ", allPinataTickets.value.length , "Old Tickets: ", initialTickets)
+          await notifyDiscordSale(discordClient,channel);
+          initialTickets = allPinataTickets.value.length
         },
       };
   }
 
-// # todo: package versions etc. ----> required updating typescript versions
-// # clean up of relative paths with imports
-// #  expand code to notify with new pins?
-// # merge together usage of env and globals.
