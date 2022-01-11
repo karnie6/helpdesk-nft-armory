@@ -7,8 +7,6 @@ import {
 import { loadConfig } from "./composables/configs/config";
 import initWorkers from "./composables/workers/initWorkers";
 
-
-
 (async () => {
   console.log("Trying to run")  
   try {
@@ -18,12 +16,12 @@ import initWorkers from "./composables/workers/initWorkers";
       const discordClient = await initDiscordClient();
       console.log("discord client created, now looking at workers");  
 
-     const workers: Worker[] = config.subscriptions.map((s) => {
-        return notifyNFTSalesWorker(discordClient, {
-            discordChannelId: s.discordChannelId,
-            mintAddress: s.mintAddress,
-        });
-        });
+      const workers: Worker[] = config.subscriptions.map((s) => {
+          return notifyNFTSalesWorker(discordClient, {
+              discordChannelId: s.discordChannelId,
+              mintAddress: s.mintAddress,
+          });
+          });
 
       initWorkers(workers);
       

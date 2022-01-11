@@ -11,22 +11,48 @@ export interface Project {
     discordChannelId: string;
   }
 
+export function findNewOpenTickets(allTickets: Array<PNFT>, notifyAfterDate: Date ) {
+  /* Find only tickets that are new from all tickets
+  */
+
+  let newOpenTickets: Array<PNFT> = [];
+
+  for (let ticket of allTickets){
+      const attr_key = 'date_pinned'
+      let attr = ticket.hasOwnProperty("date_pinned") ? ticket[attr_key] : undefined
+      if (attr){
+        let attrDate = new Date(attr);
+        if (attrDate >= notifyAfterDate){
+          console.log("Found new ticket")
+          newOpenTickets.push(ticket)
+        }
+      }
+  }
+
+  return newOpenTickets
+}
+
+
+export function updateNotifyAfterdate(){
+  /* Calculating a new datetime
+  */
+  // return new Date(Date.now());
+  return new Date(2021, 11, 31, 0, 0) // test date to check 3 tickets are found
+}
 
 export default function newWorker(
     discordClient: Discord.Client,
     project: Project
   ): Worker {
-    const timestamp = Date.now();
-    let notifyAfter = new Date(timestamp);
-
-    const {retrieveOpenTickets} = usePinata();
-  
+    
+    let notifyAfter = new Date(Date.now());
     let initialTickets: number = 0;
 
+    const {retrieveOpenTickets} = usePinata();
     const allPinataTickets = ref<PNFT[]>([]); // this is everything fetched in mem
   
     console.log("Worker func called");
-    retrieveOpenTickets() 
+    retrieveOpenTickets()
       .then((pinataTickets) => {
         if (pinataTickets.length) {
            allPinataTickets.value = pinataTickets
@@ -36,12 +62,13 @@ export default function newWorker(
           console.log("No pinata tickets found")
         }
       });
-  
-  
-  
+        
       return {
         async execute() {
-    
+          console.log("finding new tickets since notify after time ", notifyAfter)
+          // always check for new tickets for now TODO: replace with array version
+          let newOpenTickets: Array<PNFT>;
+          newOpenTickets = findNewOpenTickets(allPinataTickets.value, notifyAfter);
     
           if (!discordClient.isReady()) {
             return;
@@ -51,18 +78,27 @@ export default function newWorker(
             discordClient,
             project.discordChannelId
           );
+
           if (!channel) {
             return;
           }
-          if (allPinataTickets.value.length <= initialTickets){
-            console.log("no new tickets detected - New Tickets: ", allPinataTickets.value.length , " Old Tickets: ", initialTickets)
+          // Means we don't have new tickets
+          if (newOpenTickets.length <= initialTickets){
+            console.log("No new tickets detected | New Tickets: ", newOpenTickets.length , " Old Tickets: ", initialTickets);
+            notifyAfter = updateNotifyAfterdate();
+            console.log("updating notifyAfterdatetime to ", notifyAfter);
             return;
           }
-          console.log("ASYNC EXECUTION ##########")
-          console.log("New Tickets: ", allPinataTickets.value.length , "Old Tickets: ", initialTickets)
-          await notifyDiscordSale(discordClient,channel);
-          initialTickets = allPinataTickets.value.length
+
+          console.log("New Tickets: ", newOpenTickets.length , "Old Tickets: ", initialTickets)
+          await notifyDiscordSale(discordClient, channel, newOpenTickets);
+          initialTickets = newOpenTickets.length;
+          notifyAfter = updateNotifyAfterdate();
+          console.log("updating notifyAfterdatetime to ", notifyAfter);
         },
+
+
       };
   }
 
+  
