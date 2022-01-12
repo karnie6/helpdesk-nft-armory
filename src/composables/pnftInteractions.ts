@@ -1,16 +1,16 @@
 import { PNFT } from '@/common/helpers/types';
 
-export function generateTicketDetailLink(ticket: PNFT) {
+export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
     /* Input: Takes in a ticket (pinata NFT metadata)
        Output: link to ticket detail page using mintID or undefined (some tickets may not have mintID)
     */
-       const ticket_detail_url_prefix = "/ticketdetail/"
+       const appUrlPrefix =  typeof appUrl != undefined ? appUrl : ""
+       const ticketPageEndpoint = "/ticketdetail/"
        const attr_key = "mintId"
        let attr = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
-       return typeof attr != 'undefined' ? ticket_detail_url_prefix + attr : undefined
+       return typeof attr != 'undefined' ? appUrlPrefix + ticketPageEndpoint + attr : undefined
   }
   
-
   export function readTicketName (ticket: PNFT) {
     /* Input: Takes in a ticket (pinata NFT metadata)
        Output: reads ticket name from metadata or undefined (some tickets may not have a name)
