@@ -130,35 +130,42 @@ export default function usePinata() {
     return res.IpfsHash;
   };
 
-  const retrieveOpenTickets =  async() => {
+  const retrieveOpenTickets =  async(pinataAPIFilters?: any) => {
     /* Search Pinata account for open NTF tickets & 
-       preprocess retrieved metadata by saving as PNFT objects
+       preprocess retrieved metadata by saving as PNFT objects.
+       Input: Optional configurable filter parameters as needed
     */
 
-    const pinata_result_rows = (await retrieveOpenTicketsResultRows())
+    const pinata_result_rows = (await retrieveOpenTicketsResultRows(pinataAPIFilters))
     const pnfts = (await convertTicketsToPNFTs(pinata_result_rows))
     return pnfts
   };
 
-  const retrieveOpenTicketsResultCount = async() => {
+  const retrieveOpenTicketsResultCount = async(pinataAPIFilters?: any ) => {
     /* Search Pinata account for open NTF tickets and return count
+       Input: Optional configurable filter parameters as needed
+
     */
-    const pinata_result = (await searchForOpenTickets())
+    const pinata_result = (await searchForOpenTickets(pinataAPIFilters))
     console.log("pinata result is", pinata_result)
     return pinata_result.count
   }
 
-  const retrieveOpenTicketsResultRows =  async() => {
+  const retrieveOpenTicketsResultRows =  async(pinataAPIFilters?: any) => {
     /* Search Pinata account for open NTF tickets using metadata filter
        & return result rows
+       Input: Optional configurable filter parameters as needed
+
     */
-    const pinata_result = (await searchForOpenTickets())
+    const pinata_result = (await searchForOpenTickets(pinataAPIFilters))
     return pinata_result.rows
   };
 
 
-  const searchForOpenTickets =  async() => {
+  const searchForOpenTickets =  async(pinataAPIFilters?: any ) => {
     /* Search Pinata account for open NTF tickets using metadata filter
+      Input: Optional configurable filter parameters as needed
+
     */
     const metadataFilter = {
       keyvalues: {
@@ -175,16 +182,19 @@ export default function usePinata() {
     
     
     };
-  
-    const filters = {
-        status : 'pinned',
-        pageLimit: 25,
-        pageOffset: 0,
-        metadata: metadataFilter
-    };
 
-    const pinata_result = (await pinata.pinList(filters))
-    return pinata_result
+    // merge passed input filters with metadataFilter
+    const filters: any = {
+      ...pinataAPIFilters,
+      status : 'pinned',
+      pageLimit: 25,
+      pageOffset: 0,
+      metadata: metadataFilter,
+    };
+    
+    const pinataResult = (await pinata.pinList(filters));
+
+    return pinataResult
   };
 
   async function convertTicketsToPNFTs(tokens: PinataPinListResponseRow[]): Promise<PNFT[]> {

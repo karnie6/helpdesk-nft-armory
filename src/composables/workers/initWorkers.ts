@@ -1,6 +1,6 @@
 import { Worker } from "@/composables/workers/types";
 
-const defaultInterval = 1000 * 60; // 1 minutes
+const defaultInterval = 1000 * 60; // 1 minute (calculated in ms)
 
 export default async function initWorkers(
   workers: Worker[],
