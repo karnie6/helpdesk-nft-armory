@@ -4,7 +4,7 @@ export interface Subscription {
   mintAddress: string;
 }
 
-import {DEFAULTS} from '../../globals'
+import {DEFAULTS} from '@/globals'
 export interface Config {
   subscriptions: Subscription[];
 }

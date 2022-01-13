@@ -15,7 +15,7 @@ export function updateNotifyAfterDate(){
   /* Calculate a new date
   */
   return new Date(Date.now());
-  // return new Date(2021, 11, 31, 0, 0) // NOTE: FIXED DATE FOR TESTING: check 3 tickets are found
+  // return new Date(2021, 10, 31, 0, 0) // NOTE: FIXED DATE FOR TESTING: check 3 tickets are found
 }
 
 
@@ -27,7 +27,7 @@ export default function newWorker(
     
 
     let notifyAfter = updateNotifyAfterDate();
-    // let notifyAfter = new Date(2021, 11, 31, 0, 0); // NOTE: FIXED DATE FOR TESTING: check 3 tickets are found
+
     const allPinataTickets = ref<PNFT[]>([]); // this is everything fetched in mem
     const {retrieveOpenTickets} = usePinata();  
 
