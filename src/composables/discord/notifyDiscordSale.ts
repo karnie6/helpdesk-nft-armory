@@ -1,7 +1,7 @@
-import { PNFT } from "../../common/helpers/types";
+import { PNFT } from "@/common/helpers/types";
 import Discord, { MessageEmbed, TextChannel } from "discord.js";
 
-import {readDatePinned, readUserID, readMintID, readTicketName, readTicketStatus, readTicketType, generateTicketDetailLink}  from '../pnftInteractions'
+import {readDatePinned, readUserID, readMintID, readTicketName, readTicketStatus, readTicketType, generateTicketDetailLink}  from '@/composables/pnftInteractions'
 
 
 export function generateTicketDescription(ticket: PNFT){

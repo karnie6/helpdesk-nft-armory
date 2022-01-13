@@ -1,1 +1,1 @@
-export * from "./config";
+export * from "@/composables/configs/config";

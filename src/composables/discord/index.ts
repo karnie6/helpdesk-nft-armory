@@ -1,5 +1,5 @@
 import Discord, {TextChannel, Intents, MessageEmbed } from "discord.js";
-import {DEFAULTS} from '../../globals';
+import {DEFAULTS} from '@/globals';
 
 const myIntents = new Intents();
 myIntents.add(Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGES);

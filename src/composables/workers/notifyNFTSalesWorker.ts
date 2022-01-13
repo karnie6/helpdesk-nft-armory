@@ -1,10 +1,10 @@
 import Discord, { MessageEmbed, TextChannel } from "discord.js";
 import {ref } from 'vue';
-import { Worker } from "../workers/types";
-import {PNFT} from '../../common/helpers/types';
-import { fetchDiscordChannel } from "../discord";
-import notifyDiscordSale from "../discord/notifyDiscordSale"
-import usePinata from "../pinata";
+import { Worker } from "@/composables/workers/types";
+import {PNFT} from '@/common/helpers/types';
+import { fetchDiscordChannel } from "@/composables/discord";
+import notifyDiscordSale from "@/composables//discord/notifyDiscordSale"
+import usePinata from "@/composables//pinata";
 
 export interface Project {
     mintAddress: string;

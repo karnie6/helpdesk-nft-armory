@@ -1,5 +1,5 @@
-import initWorkers from "./initWorkers";
-import { Worker } from "./types";
+import initWorkers from "@/composables/workers/initWorkers";
+import { Worker } from "@/composables/workers/types";
 
 jest.useFakeTimers();
 jest.spyOn(global, "setInterval");

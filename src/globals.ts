@@ -33,7 +33,5 @@ export const DEFAULTS = {
   
   // The discord channel to notify
   SUBSCRIPTION_DISCORD_CHANNEL_ID: 'FILL IN',
-  
-  // Mint address to watch for sales TODO: switch 
-  SUBSCRIPTION_MINT_ADDRESS: '9px36ZsECEdSbNAobezC77Wr9BfACenRN1W8X7AUuWAb',
+
 };
