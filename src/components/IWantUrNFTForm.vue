@@ -175,6 +175,8 @@ export default defineComponent({
         }
       };
 
+      console.log(newMetadata);
+
       updatePinataMetadata(URIToHash(newNFT.value!.metadataOnchain.data.uri), newMetadata);
     };
 
@@ -235,6 +237,7 @@ export default defineComponent({
 
 
     const prepareMetadataForAnswer = async () => {
+      console.log('props', props);
       const img = await generateImgAnswer();
       const imgHash = await uploadImg(img, helpDeskWallet.publicKey!);
       const jsonHash = await uploadJSONForAnswer(imgHash, helpDeskWallet.publicKey!, nftName.value!, props.questionID!, getWalletAddress()!);
@@ -247,7 +250,7 @@ export default defineComponent({
 
       const uri = await prepareMetadata();
 
-      NFTMintMaster(helpDeskWallet as any, uri, 0)
+      await NFTMintMaster(helpDeskWallet as any, uri, 0)
         .then(async (result) => {
           mintResult.value = result as IMintResult;
          // isLoading.value = false;
@@ -265,7 +268,7 @@ export default defineComponent({
 
       const answerUri = await prepareMetadataForAnswer();
 
-      NFTMintMaster(helpDeskWallet as any, answerUri, 0)
+      await NFTMintMaster(helpDeskWallet as any, answerUri, 0)
         .then(async (result) => {
           mintResult.value = result as IMintResult;
          // isLoading.value = false;

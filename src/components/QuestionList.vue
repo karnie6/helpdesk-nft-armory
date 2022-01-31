@@ -18,8 +18,8 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked by you X mins ago</div>
             <div class="gmnh-tab-content-status">{{getDescription(n)}}</div>
-            <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
             <hr style="border: 1px solid #697077;"/>
+            <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
             <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/>
         </div> 
     </tab>
