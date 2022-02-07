@@ -19,7 +19,9 @@
             <div class="gmnh-tab-content-byline">Asked by you X mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 1px solid #697077;"/>
-            <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
+            <div v-for="(s, idx2) in getAnswer(n)" :key="s" :id="idx2" class="gmnh-tab-content-status">
+             {{s}}
+            </div>
         </div> 
     </tab>
    </tabs>
@@ -42,7 +44,9 @@
             <div class="gmnh-tab-content-byline">Asked by someone X mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 1px solid #697077;"/>
-            <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
+            <div v-for="(s, idx2) in getAnswer(n)" :key="s" :id="idx2" class="gmnh-tab-content-status">
+             {{s}}
+            </div>
         </div> 
     </tab>
    </tabs>
@@ -122,6 +126,7 @@ export default defineComponent({
             retrieveAnsweredQuestions(getWalletAddress()!) 
             .then((pinataTickets) => {
             if (pinataTickets.length) {
+              console.log(pinataTickets);
               answeredQuestions.value = pinataTickets;
             } else {
               //TODO: add error message
@@ -167,7 +172,9 @@ export default defineComponent({
       return pnftInteractions.getAnswerText(ticket);
     }, getDescription: function(ticket: PNFT) {
       return pnftInteractions.readDescription(ticket);
-    }, answerSubmitted: function () {
+    }, getAnswers: function (ticket:PNFT) {
+       return pnftInteractions.getAnswerMintId(ticket);
+    },answerSubmitted: function () {
       //console.log('answer submitted');
     } 
   },

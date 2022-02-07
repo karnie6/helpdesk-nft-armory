@@ -6,7 +6,12 @@
             <div class="gmnh-tab-content-byline">Asked XXX mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 1px solid #697077;"/>
-            <div v-if="!needsToBeAnswered(n)" class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
+            
+            <div v-if="!needsToBeAnswered(n)" class="gmnh-tab-content-status">
+              <div v-for="(s, idx2) in getAnswer(n)" :key="s" :id="idx2" class="gmnh-tab-content-status">
+              {{s}}
+              </div>
+            </div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
             <div v-else-if="!isConnected" style="margin: 0 auto;">
                     <span class="wallet-text" style="justify-content: center; display: flex; margin-top: 16px;">Connect your Solana wallet to answer this question!</span>

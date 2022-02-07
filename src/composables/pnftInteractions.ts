@@ -1,7 +1,10 @@
 import { PNFT } from '@/common/helpers/types';
 import usePinata from '@/composables/pinata';
 import useWallet from '@/composables/wallet';
+import { ref } from 'vue';
+
 const { isConnected, getWallet, getWalletAddress } = useWallet();
+const {retrieveByMintId, searchForAllAnswers} = usePinata();
 
 
 export function formatTicketDetailLink(questionMintId: string, appUrl?: string)  {
@@ -100,14 +103,60 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
     return typeof attr != 'undefined' ? attr : ""
  };
 
- export function getAnswerText (ticket: PNFT) {
+ export function getAnswerText (ticket: PNFT) : string[] {
    /* Input: Takes in a ticket (pinata NFT metadata)
       Output: mintId of answer (if exists)
    */
-     const attr_key = 'answerText'
-     let attr = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
-     return typeof attr != 'undefined' ? attr : "Awaiting answer..."
-    };
+//     const attr_key = 'answerText'
+//     let attr = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
+ //    return typeof attr != 'undefined' ? attr : "Awaiting answer..."
+
+      //console.log('here');
+      const attr_key = 'answerMintId'
+      let attr:string = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
+      
+      //attr = '3guzFYhxoKMAWZVwmTTfd3v4a4iWruGwmwBd8KGYnHzZ|whstDcyLoRZbzc7RgZ3iHz1JK77yqRhe3FQkMY3KKVu';
+      if (!attr || attr == undefined) {
+     //    console.log('here0');
+
+         return ["Awaiting answer..."];
+      } else if (!attr.includes('|')) {
+         //just one answer, return answerText for now
+         const attr_key_answerText = 'answerText'
+         let attr_answerText:string = ticket.metadata.keyvalues.hasOwnProperty(attr_key_answerText) ? ticket.metadata.keyvalues[attr_key_answerText] : undefined
+      //   console.log('here1 ', attr_answerText);
+         return typeof attr_answerText != 'undefined' ? [attr_answerText] : ["Awaiting answer..."]
+      } else {
+         console.log('here2');
+
+       //  searchForAllAnswers();
+      //todo: need to parse if multiple.
+   
+         let answers:string[] = attr.split('|');
+         var answersText: string[] = [];
+
+         console.log(answers);
+
+         for (const answer of answers) {
+             retrieveByMintId(answer) 
+            .then((pinataTickets) => {
+               console.log(pinataTickets);
+            
+               if (pinataTickets.length && pinataTickets.length == 1) {
+                  answersText.push(readTicketName(pinataTickets[0]));
+               } else {
+               // errorFinding.value = true;
+                  //TODO: add error message
+               //  updateLoadingStdErr(ERR_NO_NFTS);
+               }
+          }) 
+         }
+
+         console.log(answersText);
+
+         return answersText;
+   }
+};
 
  export function needsToBeAnswered (ticket: PNFT) {
    return (readTicketType(ticket) == 'question' && readTicketStatus(ticket) == 'open');   

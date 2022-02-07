@@ -78,7 +78,7 @@ import {DEFAULTS} from '@/globals'
 import usePinata from '@/composables/pinata';
 import useWallet from '@/composables/wallet';
 import useError from '@/composables/error';
-import { IMintResult, INFT } from '@/common/helpers/types';
+import { IMintResult, INFT, PNFT } from '@/common/helpers/types';
 import StdNotifications from '@/components/StdNotifications.vue';
 import NotifySuccess from '@/components/notifications/NotifySuccess.vue';
 import LoadingIcon from '@/components/LoadingIcon.vue';
@@ -92,6 +92,7 @@ import { NFTGet } from '@/common/NFTget';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
+
 
 export default defineComponent({
   components: {
@@ -292,10 +293,33 @@ export default defineComponent({
 
           updatePinataMetadata(URIToHash(answerUri), newMetadata);
 
+          //first, search pinata for the question since if there's already
+          //an answer, we want to append to it.
+
+          const questionFromPinata = ref<PNFT[]>([]); // this is everything fetched in mem
+
+         // const questionFromPinata = retrieveByMintId(props.hash!);
+          //questionFromPinata.
+
+   /*       retrieveByMintId(props.hash!) 
+          .then((pinataTickets) => {
+            
+          if (pinataTickets.length && pinataTickets.length == 1) {
+            questionFromPinata.value = pinataTickets;
+
+         //   questionFromPinata.value.
+        } else {
+         // errorFinding.value = true;
+            //TODO: add error message
+        //  updateLoadingStdErr(ERR_NO_NFTS);
+        }
+      }) 
+*/
           //2. metadata in IPFS for question with mintID of answer + update status
           const newMetadataForQuestion = {
             keyvalues: {
               answerMintId: mintResult.value.mint,
+              //answerMintId: '4CXZppTsM4g8vv7iNkrWELJ92Xr3SHPYm1GfhCPhvkaF|3guzFYhxoKMAWZVwmTTfd3v4a4iWruGwmwBd8KGYnHzZ',
               answerText: nftName.value!,
               status: 'answered',
             }

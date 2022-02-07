@@ -200,6 +200,9 @@ export default function usePinata() {
     };
 
     const res = (await pinata.pinList(filters))
+
+    console.log('mintId ', mintId);
+    console.log('res ', res);
     const pnfts = (await convertTicketsToPNFTs(res.rows));
     return pnfts;
   };
@@ -300,6 +303,31 @@ export default function usePinata() {
     return res.rows
   };
 
+   const searchForAllAnswers =  async() => {
+    /* Search Pinata account for open NTF tickets using metadata filter
+    */
+    const metadataFilter = {
+      keyvalues: {
+        ticket_type: {
+              value: 'answer',
+              op: 'eq'
+          }
+      },
+    };
+  
+    const filters = {
+        status : 'pinned',
+        pageLimit: 25,
+        pageOffset: 0,
+        metadata: metadataFilter
+    };
+
+
+    const res = (await pinata.pinList(filters))
+    console.log('all answers: ', res);
+    return res.rows
+  };
+
 
 
   async function convertTicketsToPNFTs(tokens: PinataPinListResponseRow[]): Promise<PNFT[]> {
@@ -345,7 +373,9 @@ export default function usePinata() {
     retrieveMyQuestions,
     searchByMintId,
     retrieveByMintId,
-    retrieveAnsweredQuestions
+    retrieveAnsweredQuestions,
+    searchForAllAnswers
+
   };
 }
 
