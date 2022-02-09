@@ -5,7 +5,7 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} XXX mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 1px solid #697077;"/>
+            <hr style="border: 5px solid #219653;"/>
             <div v-if="!needsToBeAnswered(n)" class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
             <div v-else-if="!isConnected" style="margin: 0 auto;">
@@ -147,7 +147,7 @@ export default defineComponent({
 }
 
 .gmnh-tab-content-byline {
-    font-size: 13px;
+    font-size: 12px;
     color: #878D96;
 }
 
