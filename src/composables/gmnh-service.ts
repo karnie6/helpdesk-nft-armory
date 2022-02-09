@@ -34,11 +34,11 @@ async function retrieveAnsweredQuestions(): Promise<PNFT[]> {
 }
 
 export async function getMyQuestionsFromGMNH(userWalletAddr: string): Promise<PNFT[]> {
-    const pnfts = await retrievMyQuestions(userWalletAddr);
+    const pnfts = await retrieveMyQuestions(userWalletAddr);
     return pnfts;
 }
 
-async function retrievMyQuestions(userWalletAddr: string): Promise<PNFT[]> {
+async function retrieveMyQuestions(userWalletAddr: string): Promise<PNFT[]> {
     let myQuestionsUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'myquestions' + '/' + userWalletAddr;
     
     return fetch(myQuestionsUrl)
