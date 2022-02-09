@@ -7,7 +7,9 @@ export async function getOpenQuestionsFromGMNH(): Promise<PNFT[]> {
 }
 
 async function retrieveOpenQuestions(): Promise<PNFT[]> {
-    return fetch('http://gmnh-service.herokuapp.com/openquestions')
+    let openQuestionsUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'openquestions';
+
+    return fetch(openQuestionsUrl)
             // the JSON body is taken from the response
             .then(res => res.json())
             .then(res => {
@@ -21,7 +23,9 @@ export async function getAnsweredQuestionsFromGMNH(): Promise<PNFT[]> {
 }
 
 async function retrieveAnsweredQuestions(): Promise<PNFT[]> {
-    return fetch('http://gmnh-service.herokuapp.com/answeredquestions')
+    let answeredQuestionsUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'answeredquestions';
+
+    return fetch(answeredQuestionsUrl)
             // the JSON body is taken from the response
             .then(res => res.json())
             .then(res => {
@@ -35,7 +39,7 @@ export async function getMyQuestionsFromGMNH(userWalletAddr: string): Promise<PN
 }
 
 async function retrievMyQuestions(userWalletAddr: string): Promise<PNFT[]> {
-    let myQuestionsUrl = 'http://gmnh-service.herokuapp.com/myquestions' + '/' + userWalletAddr;
+    let myQuestionsUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'myquestions' + '/' + userWalletAddr;
     
     return fetch(myQuestionsUrl)
             // the JSON body is taken from the response
