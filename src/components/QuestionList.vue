@@ -5,7 +5,7 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked by you X mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 1px solid #697077;"/>
+            <hr style="border: 5px solid #219653;"/>
             <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
         </div> 
     </tab>
@@ -28,7 +28,7 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} X mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 1px solid #697077;"/>
+            <hr style="border: 5px solid #219653;"/>
             <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
         </div> 
     </tab>
@@ -176,7 +176,7 @@ export default defineComponent({
 }
 
 .gmnh-tab-content-byline {
-    font-size: 13px;
+    font-size: 12px;
     color: #878D96;
 }
 
@@ -185,12 +185,14 @@ export default defineComponent({
     font-weight: bold;
     color: #F2F4F8;
     margin-top: 7px;
+    white-space: pre-wrap;
 }
 
 .gmnh-tab-content-description {
-    font-size: 14px;
+    font-size: 15px;
     color: #878D96;
     margin-top: 8px;
+    white-space: pre-wrap;
 }
 
 .gmnh-tab-content-nft {

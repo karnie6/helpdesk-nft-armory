@@ -156,12 +156,14 @@ export default defineComponent({
     font-weight: bold;
     color: #F2F4F8;
     margin-top: 10px;
+    white-space: pre-wrap;
 }
 
 .gmnh-tab-content-description {
     font-size: 14px;
     color: #878D96;
     margin-top: 8px;
+    white-space: pre-wrap;
 }
 
 .gmnh-tab-content-nft {
