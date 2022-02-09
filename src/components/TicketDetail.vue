@@ -3,7 +3,7 @@
     <div v-if="doesQuestionExist && !errorFinding" direction="vertical" class="gmnh-detail">
       <div v-for="(n, idx) in question" :key="n.id" :id="idx">     
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked XXX mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} XXX mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 1px solid #697077;"/>
             <div v-if="!needsToBeAnswered(n)" class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
@@ -73,7 +73,9 @@ export default defineComponent({
       return pnftInteractions.needsToBeAnswered(ticket);
     }, getDescription: function(ticket: PNFT) {
       return pnftInteractions.readDescription(ticket);
-    }
+    }, getUserName: function(ticket: PNFT) {
+      return pnftInteractions.readUserName(ticket);
+    },
   },
   setup() {
 

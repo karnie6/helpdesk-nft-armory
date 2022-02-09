@@ -15,18 +15,18 @@
       <tab v-for="(n, idx) in openQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked by someone X mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} X mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <IWantUrNFTForm @answer-submitted="answerSubmitted" :is-question=false :fromQuestionDetail=false :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" v-bind:updateOpenQuestions="updateOpenQuestions"/>        
         </div> 
     </tab>
-   </tabs>
+   </tabs> 
 
    <tabs v-if="doAnsweredQuestionsExist && (tabType == 'answeredQuestions')" direction="vertical" v-model="answeredQuestions">
       <tab v-for="(n, idx) in answeredQuestions" :key="n.id" :id="idx" :title='readTicketName(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked by someone X mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} X mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 1px solid #697077;"/>
             <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
@@ -134,6 +134,8 @@ export default defineComponent({
       return pnftInteractions.getAnswerText(ticket);
     }, getDescription: function(ticket: PNFT) {
       return pnftInteractions.readDescription(ticket);
+    }, getUserName: function(ticket: PNFT) {
+      return pnftInteractions.readUserName(ticket);
     }, answerSubmitted: function () {
     } 
   },
