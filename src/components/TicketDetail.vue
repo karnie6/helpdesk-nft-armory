@@ -3,9 +3,9 @@
     <div v-if="doesQuestionExist && !errorFinding" direction="vertical" class="gmnh-detail">
       <div v-for="(n, idx) in question" :key="n.id" :id="idx">     
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked XXX mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} XXX mins ago</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 1px solid #697077;"/>
+            <hr style="border: 5px solid #219653;"/>
             <div v-if="!needsToBeAnswered(n)" class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
             <div v-else-if="!isConnected" style="margin: 0 auto;">
@@ -73,7 +73,9 @@ export default defineComponent({
       return pnftInteractions.needsToBeAnswered(ticket);
     }, getDescription: function(ticket: PNFT) {
       return pnftInteractions.readDescription(ticket);
-    }
+    }, getUserName: function(ticket: PNFT) {
+      return pnftInteractions.readUserName(ticket);
+    },
   },
   setup() {
 
@@ -145,7 +147,7 @@ export default defineComponent({
 }
 
 .gmnh-tab-content-byline {
-    font-size: 13px;
+    font-size: 12px;
     color: #878D96;
 }
 
@@ -154,12 +156,14 @@ export default defineComponent({
     font-weight: bold;
     color: #F2F4F8;
     margin-top: 10px;
+    white-space: pre-wrap;
 }
 
 .gmnh-tab-content-description {
     font-size: 14px;
     color: #878D96;
     margin-top: 8px;
+    white-space: pre-wrap;
 }
 
 .gmnh-tab-content-nft {

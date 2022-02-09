@@ -121,6 +121,16 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
      let attr = ticket.hasOwnProperty(attr_key) ? ticket[attr_key] : undefined
      return typeof attr != 'undefined' ? attr : "Attribute Not Set"
   };
+
+  export function readUserName (ticket: PNFT) {
+   /* Input: Takes in a ticket (pinata NFT metadata)
+      Output: reads ticket user ID from metadata or undefined
+   */
+    const attr_key = 'userWallet'
+    let attr = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
+    return typeof attr != 'undefined' ? ("by " + attr) : ""
+ };
+
   export function readDatePinned (ticket: PNFT) {
     /* Input: Takes in a ticket (pinata NFT metadata)
        Output: reads ticket date pinned to pinata from metadata or undefined
@@ -145,7 +155,4 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
    let attr = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
    return typeof attr != 'undefined' ? attr : "Attribute Not Set"
  }
-
-const { retrieveOpenTickets} = usePinata();
-
 
