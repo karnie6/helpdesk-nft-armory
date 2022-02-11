@@ -92,6 +92,8 @@ import { NFTGet } from '@/common/NFTget';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
+import { uploadImage} from '@/composables/gmnh-service';
+
 
 export default defineComponent({
   components: {
@@ -154,7 +156,7 @@ export default defineComponent({
     const { isConnected, getWallet, getWalletAddress } = useWallet();
     const { clearError, setError } = useError();
 
-    const { uploadImg, uploadJSON, hashToURI, URIToHash, uploadJSONForAnswer, updatePinataMetadata, retrieveByMintId } = usePinata();
+    const { uploadJSON, hashToURI, URIToHash, uploadJSONForAnswer, updatePinataMetadata, retrieveByMintId } = usePinata();
 
     //This is the HelpDesk treasury wallet (9px36ZsECEdSbNAobezC77Wr9BfACenRN1W8X7AUuWAb) where all NFTs will be minted to
     //todo figure out way to not dox private key
@@ -178,32 +180,28 @@ export default defineComponent({
     };
 
     // --------------------------------------- prep metadata
-    const generateImg = async () => {
+
+    const generateImgQuestionForGMNHService = async () => {
       const canvas = await html2canvas(document.getElementById('canvas')!);
-      const img = canvas.toDataURL('image/png');
-      const res = await fetch(img);
-      return res.blob();
+      return canvas.toDataURL('image/png');
+
     };
 
-    const generateImgAnswer = async () => {
+    const generateImgAnswerForGMNHService = async () => {
       const canvas = await html2canvas(document.getElementById(canvasIdentifier.value)!);
-      const img = canvas.toDataURL('image/png');
-      const res = await fetch(img);
-      return res.blob();
+      return canvas.toDataURL('image/png');
     };
 
     const prepareMetadata = async () => {
-      const img = await generateImg();
-      const imgHash = await uploadImg(img, helpDeskWallet.publicKey!);
+      const img = await generateImgQuestionForGMNHService();
+      const imgHash = await uploadImage(img, helpDeskWallet.publicKey!);
       const jsonHash = await uploadJSON(imgHash, helpDeskWallet.publicKey!, nftName.value!, description.value!, getWalletAddress()!);
-
       return hashToURI(jsonHash);
     };
 
-
     const prepareMetadataForAnswer = async () => {
-      const img = await generateImgAnswer();
-      const imgHash = await uploadImg(img, helpDeskWallet.publicKey!);
+      const img = await generateImgAnswerForGMNHService();
+      const imgHash = await uploadImage(img, helpDeskWallet.publicKey!);
       const jsonHash = await uploadJSONForAnswer(imgHash, helpDeskWallet.publicKey!, nftName.value!, props.questionID!, getWalletAddress()!);
       return hashToURI(jsonHash);
     };

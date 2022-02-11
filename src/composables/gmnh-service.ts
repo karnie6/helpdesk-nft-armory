@@ -1,5 +1,7 @@
 import { DEFAULTS } from "@/globals";
 import {PNFT} from "@/common/helpers/types"
+import { PublicKey } from '@solana/web3.js';
+import axios from 'axios';
 
 export async function getOpenQuestionsFromGMNH(): Promise<PNFT[]> {
     const pnfts = await retrieveOpenQuestions();
@@ -48,6 +50,28 @@ async function retrieveMyQuestions(userWalletAddr: string): Promise<PNFT[]> {
                 return res as PNFT[]
             })
 }
+
+export async function uploadImage (img: string, walletAddr: PublicKey): Promise<string> {
+
+    const uploadImgUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'uploadImage';
+
+    const data = new FormData();
+    data.append('file', img);
+
+    const metadata = JSON.stringify({
+      name: `${walletAddr.toBase58()}.png`,
+    });
+    data.append('pinataMetadata', metadata);
+
+    const pinataOptions = JSON.stringify({
+      cidVersion: 0,
+    });
+    data.append('pinataOptions', pinataOptions);
+
+    const res = await axios.post(uploadImgUrl, data, { });
+
+    return res.data.IpfsHash;
+  };
 
 
 

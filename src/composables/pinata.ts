@@ -1,40 +1,10 @@
 import pinataSDK, { PinataClient, PinataPinListResponse, PinataPinListResponseRow } from '@pinata/sdk';
-import FormData from 'form-data';
-import axios from 'axios';
 import { PublicKey } from '@solana/web3.js';
 import { PNFT } from '@/common/helpers/types';
 import { DEFAULTS } from '@/globals';
 
 export default function usePinata() {
   const pinata = pinataSDK(DEFAULTS.PINATA_API_KEY, DEFAULTS.PINATA_API_SECRET);
-
-  const uploadImg = async (blob: Blob, walletAddr: PublicKey): Promise<string> => {
-    const url = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-
-    const data = new FormData();
-    data.append('file', blob);
-
-    const metadata = JSON.stringify({
-      name: `${walletAddr.toBase58()}.png`,
-    });
-    data.append('pinataMetadata', metadata);
-
-    const pinataOptions = JSON.stringify({
-      cidVersion: 0,
-    });
-    data.append('pinataOptions', pinataOptions);
-
-    const res = await axios.post(url, data, {
-      maxBodyLength: 'Infinity' as any, // this is needed to prevent axios from erroring out with large files
-      headers: {
-        // @ts-ignore
-        'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
-        pinata_api_key: DEFAULTS.PINATA_API_KEY,
-        pinata_secret_api_key: DEFAULTS.PINATA_API_SECRET,
-      },
-    });
-    return res.data.IpfsHash;
-  };
 
   const hashToURI = (hash: string) => `https://gateway.pinata.cloud/ipfs/${hash}`;
 
@@ -208,7 +178,6 @@ export default function usePinata() {
   };
 
   return {
-    uploadImg,
     uploadJSON,
     hashToURI,
     URIToHash,
