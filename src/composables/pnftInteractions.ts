@@ -156,3 +156,28 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
    return typeof attr != 'undefined' ? attr : "Attribute Not Set"
  }
 
+
+export function formatBylineTicketDatetime(ticketDatetimeString: string){
+   /* Input: Takes in a ticket's datetime value
+      Output: converts ticket's datetime value to specified string format
+      Example input: 2022-02-11T01:42:25.185Z
+      Example output: Thursday, Feb 10 2022 at 8:42PM
+   */
+   if (ticketDatetimeString == 'Attribute Not Set'){
+      return 'Ticket Timestamp Currently Unavailable'
+   }
+
+   let ticketDatetime: Date = new Date(Date.parse(ticketDatetimeString))
+
+   // leaving undefined; should pick up from user's system
+   let locale_option = undefined
+
+   let ticketWeekday = ticketDatetime.toLocaleString(locale_option, {weekday:"long"})
+   let ticketMonth = ticketDatetime.toLocaleString(locale_option,{ month: 'short' } )
+   let ticketDay = ticketDatetime.toLocaleString(locale_option,{ day: 'numeric' } )
+   let ticketYear = ticketDatetime.toLocaleString(locale_option, {  year: 'numeric'} )
+   let ticketTime = ticketDatetime.toLocaleString(locale_option, { hour: 'numeric', hour12: true, minute:'2-digit'})
+
+   let timeStampString = `${ticketWeekday}, ${ticketMonth} ${ticketDay} ${ticketYear} at ${ticketTime}`
+   return timeStampString
+}
