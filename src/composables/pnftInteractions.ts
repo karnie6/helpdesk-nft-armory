@@ -163,6 +163,7 @@ export function formatBylineTicketDatetime(ticketDatetimeString: string){
       Example input: 2022-02-11T01:42:25.185Z
       Example output: Thursday, Feb 10 2022 at 8:42PM
    */
+   // handle cases if input comes from readDatePinned() function
    if (ticketDatetimeString == 'Attribute Not Set'){
       return 'Ticket Timestamp Currently Unavailable'
    }
