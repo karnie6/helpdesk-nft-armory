@@ -87,12 +87,10 @@ import NFTViewCard from '@/components/NFTViewCard.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
 import ContentTooltipIWantUrNFT from '@/components/content/tooltip/ContentTooltipIWantUrNFT.vue';
 import useModal from '@/composables/modal';
-import { NFTMintMaster } from '@/common/NFTmint';
-import { NFTGet } from '@/common/NFTget';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { uploadImage, createGMNHQuestion, createGMNHAnswer} from '@/composables/gmnh-service';
+import { createGMNHQuestion, createGMNHAnswer} from '@/composables/gmnh-service';
 
 
 export default defineComponent({
@@ -156,7 +154,7 @@ export default defineComponent({
     const { isConnected, getWallet, getWalletAddress } = useWallet();
     const { clearError, setError } = useError();
 
-    const { uploadJSON, hashToURI, URIToHash, uploadJSONForAnswer, updatePinataMetadata, retrieveByMintId } = usePinata();
+    const { retrieveByMintId } = usePinata();
 
     //This is the HelpDesk treasury wallet (9px36ZsECEdSbNAobezC77Wr9BfACenRN1W8X7AUuWAb) where all NFTs will be minted to
     //todo figure out way to not dox private key
@@ -190,20 +188,6 @@ export default defineComponent({
     const generateImgAnswerForGMNHService = async () => {
       const canvas = await html2canvas(document.getElementById(canvasIdentifier.value)!);
       return canvas.toDataURL('image/png');
-    };
-
-    const prepareMetadata = async () => {
-      const img = await generateImgQuestionForGMNHService();
-      const imgHash = await uploadImage(img, helpDeskWallet.publicKey!);
-      const jsonHash = await uploadJSON(imgHash, helpDeskWallet.publicKey!, nftName.value!, description.value!, getWalletAddress()!);
-      return hashToURI(jsonHash);
-    };
-
-    const prepareMetadataForAnswer = async () => {
-      const img = await generateImgAnswerForGMNHService();
-      const imgHash = await uploadImage(img, helpDeskWallet.publicKey!);
-      const jsonHash = await uploadJSONForAnswer(imgHash, helpDeskWallet.publicKey!, nftName.value!, props.questionID!, getWalletAddress()!);
-      return hashToURI(jsonHash);
     };
 
     const createTicket = async () => {
@@ -258,7 +242,6 @@ export default defineComponent({
       
     }
 
-
     const createAnswer = async () => {
       //switch to loading view
       reset();
@@ -274,48 +257,6 @@ export default defineComponent({
           setError(e);
           isLoading.value = false;
       });
-
-/*
-
-      reset();
-
-      const answerUri = await prepareMetadataForAnswer();
-
-      NFTMintMaster(helpDeskWallet as any, answerUri, 0)
-        .then(async (result) => {
-          mintResult.value = result as IMintResult;
-          isCreated.value = true;
-
-          //  emit("answer-submitted");
-
-          //1. metadata in IPFS for answer with mintID of NFT
-          const newMetadata = {
-            keyvalues: {
-              mintId: mintResult.value.mint,
-           }
-          };
-
-          updatePinataMetadata(URIToHash(answerUri), newMetadata);
-
-          //2. metadata in IPFS for question with mintID of answer + update status
-          const newMetadataForQuestion = {
-            keyvalues: {
-              answerMintId: mintResult.value.mint,
-              answerText: nftName.value!,
-              status: 'answered',
-            }
-          };
-
-          updatePinataMetadata(props.hash!, newMetadataForQuestion);
-
-        })
-        .catch((e) => {
-          console.log('error occured: ', e);
-          setError(e);
-          isLoading.value = false;
-        });
-
-        */
 
         // Email question asker about their question being answered
         sendEmailUpdateQuestionAsker();
