@@ -92,7 +92,7 @@ import { NFTGet } from '@/common/NFTget';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { uploadImage} from '@/composables/gmnh-service';
+import { uploadImage, createQuestion} from '@/composables/gmnh-service';
 
 
 export default defineComponent({
@@ -206,30 +206,18 @@ export default defineComponent({
       return hashToURI(jsonHash);
     };
 
-    // --------------------------------------- mint newe nft
     const createTicket = async () => {
+      //switch to loading view
       reset();
-
-      const uri = await prepareMetadata();
-
-      NFTMintMaster(helpDeskWallet as any, uri, 0)
-        .then(async (result) => {
-          mintResult.value = result as IMintResult;
-          isCreated.value = true;
-          
-          //update IPFS metadata with mintId
-          const newMetadata = {
-          keyvalues: {
-            mintId: mintResult.value.mint,
-          }
-          };
-
-          updatePinataMetadata(URIToHash(uri), newMetadata);
-        })
-        .catch((e) => {
-          console.log('some error happened', e);
-          setError(e);
-        });
+      
+      //create NFT
+      const img = await generateImgQuestionForGMNHService();      
+      await createQuestion(img, nftName.value!, description.value!, getWalletAddress()! )
+      .then(async (result) => {
+        mintResult.value = result;
+        isCreated.value = true;
+      });
+      
     };
 
     const sendEmailUpdateQuestionAsker = async() => {
