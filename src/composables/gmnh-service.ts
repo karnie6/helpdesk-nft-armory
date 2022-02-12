@@ -74,7 +74,7 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
   };
 
 
-  export async function createQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
+  export async function createGMNHQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
 
     const createQuestionUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createQuestion';
 
@@ -86,6 +86,23 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
 
     //TODO: ADD ERROR HANDLING
     const res = await axios.post(createQuestionUrl, data, { });
+
+    return res.data;
+  };
+
+  export async function createGMNHAnswer (img: string, title: string, questionID: string, questionIPFSHash: string, walletAddr: PublicKey): Promise<IMintResult> {
+
+    const createAnswerUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createAnswer';
+
+    const data = new FormData();
+    data.append('file', img);
+    data.append('title', title);
+    data.append('questionID', questionID);
+    data.append('questionIPFSHash', questionIPFSHash);
+    data.append('userWalletAddr', walletAddr.toBase58());
+
+    //TODO: ADD ERROR HANDLING
+    const res = await axios.post(createAnswerUrl, data, { });
 
     return res.data;
   };

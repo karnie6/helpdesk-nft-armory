@@ -92,7 +92,7 @@ import { NFTGet } from '@/common/NFTget';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { uploadImage, createQuestion} from '@/composables/gmnh-service';
+import { uploadImage, createGMNHQuestion, createGMNHAnswer} from '@/composables/gmnh-service';
 
 
 export default defineComponent({
@@ -212,12 +212,15 @@ export default defineComponent({
       
       //create NFT
       const img = await generateImgQuestionForGMNHService();      
-      await createQuestion(img, nftName.value!, description.value!, getWalletAddress()! )
+      await createGMNHQuestion(img, nftName.value!, description.value!, getWalletAddress()! )
       .then(async (result) => {
         mintResult.value = result;
         isCreated.value = true;
-      });
-      
+      }).catch((e) => {
+          console.log('error occured when creating a question: ', e);
+          setError(e);
+          isLoading.value = false;
+        });
     };
 
     const sendEmailUpdateQuestionAsker = async() => {
@@ -256,8 +259,24 @@ export default defineComponent({
     }
 
 
-
     const createAnswer = async () => {
+      //switch to loading view
+      reset();
+      
+      //create NFT
+      const img = await generateImgAnswerForGMNHService();      
+      await createGMNHAnswer(img, nftName.value!, props.questionID!, props.hash!, getWalletAddress()! )
+      .then(async (result) => {
+        mintResult.value = result;
+        isCreated.value = true;
+      }).catch((e) => {
+          console.log('error occured when creating a answer: ', e);
+          setError(e);
+          isLoading.value = false;
+      });
+
+/*
+
       reset();
 
       const answerUri = await prepareMetadataForAnswer();
@@ -295,6 +314,8 @@ export default defineComponent({
           setError(e);
           isLoading.value = false;
         });
+
+        */
 
         // Email question asker about their question being answered
         sendEmailUpdateQuestionAsker();
