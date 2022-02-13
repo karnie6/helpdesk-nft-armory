@@ -1,5 +1,5 @@
 import { computed, readonly, ref, shallowRef, Ref } from 'vue';
-import {
+/*import {
   getPhantomWallet,
   getSolflareWallet,
   getSolflareWebWallet,
@@ -7,25 +7,41 @@ import {
   getSolletWallet,
   Wallet,
   WalletName,
-} from '@solana/wallet-adapter-wallets';
+} from '@solana/wallet-adapter-wallets'; */
 import { PublicKey } from '@solana/web3.js';
-import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
+import {WalletStore} from 'solana-wallets-vue'
+//import { SignerWalletAdapter } from '@solana/wallet-adapter-base';
 
-const walletClass = ref<Wallet | null>(null);
-const walletAdapter = ref<Ref<SignerWalletAdapter | null>>(shallowRef(null));
+//const walletClass = ref<Wallet | null>(null);
+//const walletAdapter = ref<Ref<SignerWalletAdapter | null>>(shallowRef(null));
 
+import { WalletMultiButton, useWallet } from 'solana-wallets-vue';
+
+
+
+/*
 const walletMapping = {
   Phantom: getPhantomWallet,
   Sollet: getSolletWallet,
   'Sollet (Extension)': getSolletExtensionWallet,
   Solflare: getSolflareWallet,
   'Solflare (Web)': getSolflareWebWallet,
-};
+};//
+*/
 
-export default function useWallet() {
-  const isConnected = computed(() => !!walletAdapter.value);
+//const wallet = ref<WalletStore>();
 
-  const getWallet = (): SignerWalletAdapter | null => {
+const wallet = ref<Ref<WalletStore | null>>(shallowRef(null));
+
+
+export default function getWallet() {
+  const getWalletAddress = (): PublicKey | null => { return useWallet().publicKey.value; };
+
+  const isConnected = (): Boolean => { return useWallet().connected.value} 
+
+  
+
+ /* const getWallet = (): SignerWalletAdapter | null => {
     if (walletAdapter.value) {
       return walletAdapter.value;
     }
@@ -73,12 +89,10 @@ export default function useWallet() {
     return null;
   };
 
+  */
+
   return {
-    wallet: readonly(walletAdapter),
     isConnected,
-    getWallet,
-    setWallet,
-    getWalletName,
-    getWalletAddress,
+    getWalletAddress
   };
 }
