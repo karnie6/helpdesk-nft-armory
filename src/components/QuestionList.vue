@@ -3,7 +3,7 @@
       <tab v-for="(n, idx) in myQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked by you X mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked by you {{getFormattedDatePinned(n)}} </div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 5px solid #219653;"/>
             <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
@@ -15,7 +15,7 @@
       <tab v-for="(n, idx) in openQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} X mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}} </div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <IWantUrNFTForm @answer-submitted="answerSubmitted" :is-question=false :fromQuestionDetail=false :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" v-bind:updateOpenQuestions="updateOpenQuestions"/>        
         </div> 
@@ -26,7 +26,7 @@
       <tab v-for="(n, idx) in answeredQuestions" :key="n.id" :id="idx" :title='readTicketName(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} X mins ago</div>
+            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             <hr style="border: 5px solid #219653;"/>
             <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
@@ -137,7 +137,9 @@ export default defineComponent({
     }, getUserName: function(ticket: PNFT) {
       return pnftInteractions.readUserName(ticket);
     }, answerSubmitted: function () {
-    } 
+    }, getFormattedDatePinned: function(ticket: PNFT){
+      return pnftInteractions.formatBylineTicketDatetime(pnftInteractions.readDatePinned(ticket));
+    },
   },
   onUpdated() {
   },
