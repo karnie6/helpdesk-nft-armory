@@ -1,5 +1,5 @@
 import { DEFAULTS } from "@/globals";
-import {PNFT} from "@/common/helpers/types"
+import {PNFT, IMintResult} from "@/common/helpers/types"
 import { PublicKey } from '@solana/web3.js';
 import axios from 'axios';
 
@@ -71,6 +71,40 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
     const res = await axios.post(uploadImgUrl, data, { });
 
     return res.data.IpfsHash;
+  };
+
+
+  export async function createGMNHQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
+
+    const createQuestionUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createQuestion';
+
+    const data = new FormData();
+    data.append('file', img);
+    data.append('title', title);
+    data.append('description', description);
+    data.append('userWalletAddr', walletAddr.toBase58());
+
+    //TODO: ADD ERROR HANDLING
+    const res = await axios.post(createQuestionUrl, data, { });
+
+    return res.data;
+  };
+
+  export async function createGMNHAnswer (img: string, title: string, questionID: string, questionIPFSHash: string, walletAddr: PublicKey): Promise<IMintResult> {
+
+    const createAnswerUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createAnswer';
+
+    const data = new FormData();
+    data.append('file', img);
+    data.append('title', title);
+    data.append('questionID', questionID);
+    data.append('questionIPFSHash', questionIPFSHash);
+    data.append('userWalletAddr', walletAddr.toBase58());
+
+    //TODO: ADD ERROR HANDLING
+    const res = await axios.post(createAnswerUrl, data, { });
+
+    return res.data;
   };
 
 
