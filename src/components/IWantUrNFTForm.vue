@@ -153,7 +153,7 @@ export default defineComponent({
 
     const canvasIdentifier = computed(() => {return "canvas-" + props.hash});
 
-    const { isConnected, getWallet, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = useWallet();
     const { clearError, setError } = useError();
 
     const { uploadJSON, hashToURI, URIToHash, uploadJSONForAnswer, updatePinataMetadata, retrieveByMintId } = usePinata();

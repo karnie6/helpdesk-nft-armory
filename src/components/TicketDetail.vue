@@ -41,7 +41,7 @@ import usePinata from '@/composables/pinata';
 import * as pnftInteractions from '@/composables/pnftInteractions';
 import { PNFT } from '@/common/helpers/types';
 
-const { isConnected, getWallet, getWalletAddress } = useWallet();
+const { isConnected, getWalletAddress } = useWallet();
 const question = ref<PNFT[]>([]); // this is everything fetched in mem
 
 const ticket = ref<INFT | null>(null);
@@ -92,7 +92,7 @@ export default defineComponent({
     }); */
     //setCluster(Cluster.Devnet);
 
-    const { isConnected, getWallet, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = useWallet();
     const { error, clearError, setError } = useError();
 
     //grabbing ticketID from URL

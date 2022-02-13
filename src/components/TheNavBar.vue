@@ -34,7 +34,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const path = computed(() => route.path);
-    const { isConnected, getWallet, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = useWallet();
 
     return {
       path,
