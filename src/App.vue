@@ -110,7 +110,7 @@ const updateAnsweredQuestions = ref<Boolean>(false);
 const shouldShowEmailModal = ref<Boolean>(false);
 const emailSubmitted = ref<Boolean>(false);
 
-const { isConnected, getWallet, getWalletAddress } = useWallet();
+const { isConnected, getWalletAddress } = useWallet();
 
 const emailAddress = ref('');
 
@@ -147,7 +147,7 @@ export default defineComponent({
       immediate: true,
       deep: true,
       handler(newValue, oldValue) {
-        if (newValue) {
+        if (newValue && isConnected()) {
             hasUserBeenAsked(getWalletAddress()!.toBase58()).
             then(async (result) => {
               //if the user has been asked, then we should not show email (that's why its the opposite)
@@ -166,7 +166,7 @@ export default defineComponent({
     onUnmounted(() => window.removeEventListener('resize', onWidthChange));
 
     const enterEmail = async () => {
-      if (isConnected.value) {
+      if (isConnected()) {
 
         addEmailAddress(getWalletAddress()!.toBase58(), emailAddress.value).
             then(async (result) => {
