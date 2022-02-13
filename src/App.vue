@@ -1,6 +1,6 @@
 <template>
   <!-- no mobile -->
-  <TheMobileCover v-if="windowWidth < 800" />
+  <TheMobileCover v-if="$isMobile()" />
   <div class="relative h-full min-h-screen">
     <!--navbar + logo-->
     <TheNavBar />
@@ -100,7 +100,6 @@ import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import QuestionList from '@/components/QuestionList.vue';
 import TicketDetail from '@/components/TicketDetail.vue';
 import TheMobileCover from '@/components/TheMobileCover.vue';
-
 import {hasUserBeenAsked} from '@/composables/airtable';
 
 import Tab from '@/components/Tab.vue';
