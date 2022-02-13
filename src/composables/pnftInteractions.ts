@@ -169,14 +169,14 @@ export function formatBylineTicketDatetime(ticketDatetimeString: string){
    try {
       let ticketDatetimeUnixTs = Date.parse(ticketDatetimeString)
       // certain scenarios -> don't display anything
-      if (ticketDatetimeString == 'Attribute Not Set' || isNaN(ticketDatetimeUnixTs)){
+      if (isNaN(ticketDatetimeUnixTs)){
          return ''
       }
       ticketDatetime = new Date(ticketDatetimeUnixTs)
 
    } catch(err){
       console.error('Error raised from parsing ticket datetime', err)
-      throw err
+      return ''
    }
 
    // leaving undefined; should pick up from user's system
