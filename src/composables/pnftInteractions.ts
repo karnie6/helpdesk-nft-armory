@@ -163,12 +163,21 @@ export function formatBylineTicketDatetime(ticketDatetimeString: string){
       Example input: 2022-02-11T01:42:25.185Z
       Example output: Thursday, Feb 10 2022 at 8:42PM
    */
-   // handle cases if input comes from readDatePinned() function
-   if (ticketDatetimeString == 'Attribute Not Set'){
-      return 'Ticket Timestamp Currently Unavailable'
-   }
 
-   let ticketDatetime: Date = new Date(Date.parse(ticketDatetimeString))
+   let ticketDatetime: Date
+
+   try {
+      let ticketDatetimeUnixTs = Date.parse(ticketDatetimeString)
+      // certain scenarios -> don't display anything
+      if (ticketDatetimeString == 'Attribute Not Set' || isNaN(ticketDatetimeUnixTs)){
+         return ''
+      }
+      ticketDatetime = new Date(ticketDatetimeUnixTs)
+
+   } catch(err){
+      console.error('Error raised from parsing ticket datetime', err)
+      throw err
+   }
 
    // leaving undefined; should pick up from user's system
    let locale_option = undefined
@@ -179,6 +188,6 @@ export function formatBylineTicketDatetime(ticketDatetimeString: string){
    let ticketYear = ticketDatetime.toLocaleString(locale_option, {  year: 'numeric'} )
    let ticketTime = ticketDatetime.toLocaleString(locale_option, { hour: 'numeric', hour12: true, minute:'2-digit'})
 
-   let timeStampString = `${ticketWeekday}, ${ticketMonth} ${ticketDay} ${ticketYear} at ${ticketTime}`
-   return timeStampString
+   let timestampDisplayString = `on ${ticketWeekday}, ${ticketMonth} ${ticketDay} ${ticketYear} at ${ticketTime}`
+   return timestampDisplayString
 }
