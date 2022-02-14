@@ -100,12 +100,12 @@ import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import QuestionList from '@/components/QuestionList.vue';
 import TicketDetail from '@/components/TicketDetail.vue';
 import TheMobileCover from '@/components/TheMobileCover.vue';
-import {hasUserBeenAsked} from '@/composables/airtable';
 
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
 import useWallet from './composables/wallet';
 import {addEmailAddress} from './composables/airtable';
+import {checkHasUserBeenAsked} from '@/composables/gmnh-service';
 
 const clearAskQuestion = ref<Boolean>(false);
 const updateMyQuestions = ref<Boolean>(false);
@@ -153,7 +153,7 @@ export default defineComponent({
       deep: true,
       handler(newValue, oldValue) {
         if (newValue) {
-            hasUserBeenAsked(getWalletAddress()!.toBase58()).
+            checkHasUserBeenAsked(getWalletAddress()!.toBase58()).
             then(async (result) => {
               //if the user has been asked, then we should not show email (that's why its the opposite)
               shouldShowEmailModal.value = !result;

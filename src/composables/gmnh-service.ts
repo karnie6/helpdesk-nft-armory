@@ -109,3 +109,17 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
 
 
 
+  export async function checkHasUserBeenAsked(userWalletAddress: string): Promise<boolean> {
+    /* Input: user wallet address
+       Output: boolean of whether user has been asked previously for email already
+    */
+    const hasUserBeenAskedUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'queryAirtableHasUserBeenAsked' + `/${userWalletAddress}`;
+
+    //TODO: ADD ERROR HANDLING
+    const result = await axios.get(hasUserBeenAskedUrl);
+
+    return result.data;
+  };
+
+
+
