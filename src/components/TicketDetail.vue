@@ -10,7 +10,7 @@
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
             <div v-else-if="!isConnected" style="margin: 0 auto;">
                     <span class="wallet-text" style="justify-content: center; display: flex; margin-top: 16px;">Connect your Solana wallet to answer this question!</span>
-                    <ConfigPane/>
+                  <!--  <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </div>
             <div v-else>
@@ -29,7 +29,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue';
 // @ts-ignore
 import { PublicKey } from '@solana/web3.js';
 
-import useWallet from '@/composables/wallet';
+import getWallet from '@/composables/wallet';
 import useError from '@/composables/error';
 import { INFT } from '@/common/helpers/types';
 import { useRoute } from 'vue-router';
@@ -41,7 +41,6 @@ import usePinata from '@/composables/pinata';
 import * as pnftInteractions from '@/composables/pnftInteractions';
 import { PNFT } from '@/common/helpers/types';
 
-const { isConnected, getWalletAddress } = useWallet();
 const question = ref<PNFT[]>([]); // this is everything fetched in mem
 
 const ticket = ref<INFT | null>(null);
@@ -92,7 +91,7 @@ export default defineComponent({
     }); */
     //setCluster(Cluster.Devnet);
 
-    const { isConnected, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = getWallet();
     const { error, clearError, setError } = useError();
 
     //grabbing ticketID from URL

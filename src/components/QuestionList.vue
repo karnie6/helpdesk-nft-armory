@@ -44,7 +44,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'; 
 import 'vue-json-pretty/lib/styles.css'; 
-import useWallet from '@/composables/wallet';
+import getWallet from '@/composables/wallet';
 import Tabs from '@/components/Tabs.vue';
 import Tab from '@/components/Tab.vue';
 import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
@@ -53,7 +53,7 @@ import QuestionItem from '@/components/QuestionItem.vue';
 import * as pnftInteractions from '@/composables/pnftInteractions'
 import { getOpenQuestionsFromGMNH, getAnsweredQuestionsFromGMNH, getMyQuestionsFromGMNH} from '@/composables/gmnh-service';
 
-const { isConnected, getWalletAddress } = useWallet();
+const { isConnected, getWalletAddress } = getWallet();
 const myQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const openQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const answeredQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
@@ -143,10 +143,6 @@ export default defineComponent({
   },
   setup(props) {
     //fetch initially so that there isn't lag for first tab open
-
-    console.log('here');
-    console.log(isConnected());
-
     if (props.tabType && props.tabType == 'myQuestions') {
 
       getMyQuestionsFromGMNH(getWalletAddress()!.toBase58()).then((myQuestionsFromGMNH) => {

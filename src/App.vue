@@ -44,7 +44,7 @@
                   </section>
                   <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
                   </section>
           </tab>
@@ -54,7 +54,7 @@
             </section>
             <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
@@ -64,7 +64,7 @@
             </section>
             <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
@@ -74,7 +74,7 @@
             </section>
             <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
@@ -100,7 +100,7 @@ import {hasUserBeenAsked} from '@/composables/airtable';
 
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
-import useWallet from './composables/wallet';
+import getWallet from './composables/wallet';
 import {addEmailAddress} from './composables/airtable';
 
 const clearAskQuestion = ref<Boolean>(false);
@@ -110,7 +110,7 @@ const updateAnsweredQuestions = ref<Boolean>(false);
 const shouldShowEmailModal = ref<Boolean>(false);
 const emailSubmitted = ref<Boolean>(false);
 
-const { isConnected, getWalletAddress } = useWallet();
+const { isConnected, getWalletAddress } = getWallet();
 
 const emailAddress = ref('');
 
@@ -147,7 +147,7 @@ export default defineComponent({
       immediate: true,
       deep: true,
       handler(newValue, oldValue) {
-        if (newValue && isConnected()) {
+        if (newValue && isConnected) {
             hasUserBeenAsked(getWalletAddress()!.toBase58()).
             then(async (result) => {
               //if the user has been asked, then we should not show email (that's why its the opposite)
@@ -166,7 +166,7 @@ export default defineComponent({
     onUnmounted(() => window.removeEventListener('resize', onWidthChange));
 
     const enterEmail = async () => {
-      if (isConnected()) {
+      if (isConnected) {
 
         addEmailAddress(getWalletAddress()!.toBase58(), emailAddress.value).
             then(async (result) => {
@@ -181,6 +181,7 @@ export default defineComponent({
     return {
       windowWidth,
       isConnected,
+      getWalletAddress,
       clearAskQuestion,
       updateMyQuestions,
       updateOpenQuestions,

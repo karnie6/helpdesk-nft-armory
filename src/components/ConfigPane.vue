@@ -1,6 +1,6 @@
 <template>
-  <div class="gmnh-center flex justify-center content-center max-w-xl">
-        <wallet-multi-button></wallet-multi-button>
+  <div class="gmnh-center flex justify-center content-center">
+        <wallet-multi-button dark></wallet-multi-button>
     <!--<div class="nes-select is-dark flex-1">
       <select required id="cluster" v-model="chosenCluster">
         <option :value="Cluster.Mainnet">Mainnet</option>
@@ -47,7 +47,7 @@ export default defineComponent({
 
     
 
-    initWallet(walletOptions);
+  //  initWallet(walletOptions);
 
     return {
     };

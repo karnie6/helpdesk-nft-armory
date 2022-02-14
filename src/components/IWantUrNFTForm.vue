@@ -76,7 +76,7 @@ import { PublicKey, Keypair } from '@solana/web3.js';
 import { NodeWallet } from '@metaplex/js';
 import {DEFAULTS} from '@/globals'
 import usePinata from '@/composables/pinata';
-import useWallet from '@/composables/wallet';
+import getWallet from '@/composables/wallet';
 import useError from '@/composables/error';
 import { IMintResult, INFT } from '@/common/helpers/types';
 import StdNotifications from '@/components/StdNotifications.vue';
@@ -153,7 +153,7 @@ export default defineComponent({
 
     const canvasIdentifier = computed(() => {return "canvas-" + props.hash});
 
-    const { isConnected, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = getWallet();
     const { clearError, setError } = useError();
 
     const { uploadJSON, hashToURI, URIToHash, uploadJSONForAnswer, updatePinataMetadata, retrieveByMintId } = usePinata();
