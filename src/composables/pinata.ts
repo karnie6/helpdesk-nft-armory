@@ -1,5 +1,4 @@
 import pinataSDK, { PinataClient, PinataPinListResponse, PinataPinListResponseRow } from '@pinata/sdk';
-import { PublicKey } from '@solana/web3.js';
 import { PNFT } from '@/common/helpers/types';
 import { DEFAULTS } from '@/globals';
 
@@ -9,104 +8,6 @@ export default function usePinata() {
   const hashToURI = (hash: string) => `https://gateway.pinata.cloud/ipfs/${hash}`;
 
   const URIToHash = (uri: string) => uri.substring(uri.lastIndexOf("/") + 1, uri.length);
-
-  /*  const uploadJSON = async (imgIpfsHash: string, walletAddr: PublicKey) => {
-      return uploadJSONWithDescription(imgIpfsHash, walletAddr, "description");
-    }; */
-
-  const uploadJSON = async (imgIpfsHash: string, gmnhWalletAddr: PublicKey, title: string, description: string, userWalletAddr: PublicKey) => {
-    const metadata = {
-      name: 'GMneedhelp Question',
-      symbol: 'HELP',
-      title: title,
-      description: description,
-      seller_fee_basis_points: 0,
-      image: hashToURI(imgIpfsHash),
-      properties: {
-        category: 'image',
-        files: [
-          {
-            uri: hashToURI(imgIpfsHash),
-            type: 'image/png',
-          },
-        ],
-        ticket_type: 'question',
-        generation: 'v1',
-        creators: [
-          {
-            address: gmnhWalletAddr.toBase58(),
-            share: 100,
-          },
-        ],
-      },
-    };
-
-    const options = {
-      pinataMetadata: {
-        name: title.substring(0,254),
-        keyvalues: {
-          'name': title,
-          'description': description,
-          'ticket_type': 'question',
-          'status': 'open',
-          'userWallet': userWalletAddr.toBase58(),
-          'imageURI': hashToURI(imgIpfsHash)
-        }
-      },
-      pinataOptions: {
-        cidVersion: 0,
-      },
-    };
-    const res = await pinata.pinJSONToIPFS(metadata, options as any);
-    return res.IpfsHash;
-  };
-
-
-  const uploadJSONForAnswer = async (imgIpfsHash: string, gmnhWalletAddr: PublicKey, title: string, questionID: string, userWalletAddr: PublicKey) => {
-    const metadata = {
-      name: 'GMneedhelp Answer',
-      symbol: 'HELP',
-      title: title,
-      seller_fee_basis_points: 0,
-      image: hashToURI(imgIpfsHash),
-      properties: {
-        category: 'image',
-        files: [
-          {
-            uri: hashToURI(imgIpfsHash),
-            type: 'image/png',
-          },
-        ],
-        creators: [
-          {
-            address: gmnhWalletAddr.toBase58(),
-            share: 100,
-          },
-        ],
-        ticket_type: 'answer',
-        question_mint_id: questionID,
-        generation: 'v1',
-      },
-    };
-
-    const options = {
-      pinataMetadata: {
-        name: title.substring(0,254),
-        keyvalues: {
-          'name': title,
-          'ticket_type': 'answer',
-          'questionMintId': questionID,
-          'userWallet': userWalletAddr.toBase58(),
-          'imageURI': hashToURI(imgIpfsHash)
-        }
-      },
-      pinataOptions: {
-        cidVersion: 0,
-      },
-    };
-    const res = await pinata.pinJSONToIPFS(metadata, options as any);
-    return res.IpfsHash;
-  };
 
   const searchByMintId =  async(mintId: string) => {
     /* Search Pinata account by mintId
@@ -163,26 +64,12 @@ export default function usePinata() {
           metadata: t.metadata,
         })
       )
-    
     )
   }
 
-  const updatePinataMetadata = async(ipfsHash: string, metaDataHash: {}) => {
-
-    pinata.hashMetadata(ipfsHash, metaDataHash).then((result) => {
-      //handle results here
-      }).catch((err) => {
-        console.log('an error occured when updating metadata', err);
-      //handle error here
-    });
-  };
-
   return {
-    uploadJSON,
     hashToURI,
     URIToHash,
-    uploadJSONForAnswer,
-    updatePinataMetadata,
     convertTicketsToPNFTs,
     searchByMintId,
     retrieveByMintId,

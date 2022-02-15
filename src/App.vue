@@ -1,4 +1,6 @@
 <template>
+  <!-- no mobile -->
+  <TheMobileCover v-if="$isMobile()" />
   <div class="relative h-full min-h-screen">
     <!--navbar + logo-->
     <TheNavBar />
@@ -84,6 +86,8 @@
         <TicketDetail/>
       </div>
   </div>
+
+
 </template>
 
 <script lang="ts">
@@ -95,7 +99,7 @@ import TheFooter from '@/components/TheFooter.vue';
 import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import QuestionList from '@/components/QuestionList.vue';
 import TicketDetail from '@/components/TicketDetail.vue';
-
+import TheMobileCover from '@/components/TheMobileCover.vue';
 import {hasUserBeenAsked} from '@/composables/airtable';
 
 import Tab from '@/components/Tab.vue';
@@ -115,7 +119,8 @@ const { isConnected, getWalletAddress } = getWallet();
 const emailAddress = ref('');
 
 export default defineComponent({
-  components: { TheFooter, TheLogo, ConfigPane, TheNavBar, Tab, Tabs, IWantUrNFTForm, QuestionList, TicketDetail},
+  components: { TheFooter, TheLogo, ConfigPane, TheNavBar, Tab, Tabs, IWantUrNFTForm, QuestionList, TicketDetail, TheMobileCover},
+
   methods: {
     tabChanged: function (index:Number) {
       if (index == 1) {

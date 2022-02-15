@@ -9,9 +9,9 @@ import {DEFAULTS} from './globals';
 import './style.css';
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
 import SolanaWallets from 'solana-wallets-vue';
-import { initWallet } from 'solana-wallets-vue';
 // You can either import the default styles or create your own.
 import 'solana-wallets-vue/styles.css';
+import VueMobileDetection from 'vue-mobile-detection'
 
 import {
   PhantomWalletAdapter,
@@ -34,4 +34,5 @@ createApp(App)
     config: { id: 'G-6MN98MZZPL' },
   })
   .use(SolanaWallets, walletOptions)
+  .use(VueMobileDetection) // enable usage of $isMobile() with App.vue for Mobile Cover
   .mount('#app');
