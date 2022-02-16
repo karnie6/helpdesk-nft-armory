@@ -13,7 +13,6 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
           <div class="d-flex">
             <div class="d-flex align-items-center">
-              <div class="placeholder me-2"></div>
               <ConfigPane />
             </div>
           </div>
@@ -34,7 +33,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const path = computed(() => route.path);
-    const { isConnected, getWallet, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = useWallet();
 
     return {
       path,

@@ -4,18 +4,35 @@ import router from './router';
 import './index.css';
 import VueGtag from 'vue-gtag';
 import 'bootstrap/dist/css/bootstrap.min.css'
+import {DEFAULTS} from './globals';
 //import './bootstrap.min.css';
 import './style.css';
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
+import SolanaWallets from 'solana-wallets-vue';
+// You can either import the default styles or create your own.
+import 'solana-wallets-vue/styles.css';
 import VueMobileDetection from 'vue-mobile-detection'
 
-if (process.env.VUE_APP_MAINNET_URL && process.env.VUE_APP_MAINNET_URL!.includes('genesysgo')) {
-  console.log('powered by gg');
-}
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from '@solana/wallet-adapter-wallets';
+
+const walletOptions = {
+    wallets: [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter({ network: WalletAdapterNetwork.Testnet}),
+    ],
+    autoConnect: true,
+  }
+
+//initWallet(walletOptions);
 
 createApp(App)
   .use(router)
   .use(VueGtag, {
     config: { id: 'G-6MN98MZZPL' },
   })
+  .use(SolanaWallets, walletOptions)
   .use(VueMobileDetection) // enable usage of $isMobile() with App.vue for Mobile Cover
   .mount('#app');

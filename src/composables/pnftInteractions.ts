@@ -1,8 +1,4 @@
 import { PNFT } from '@/common/helpers/types';
-import usePinata from '@/composables/pinata';
-import useWallet from '@/composables/wallet';
-const { isConnected, getWallet, getWalletAddress } = useWallet();
-
 
 export function formatTicketDetailLink(questionMintId: string, appUrl?: string)  {
    /* Input: Takes in a question's mintId 
