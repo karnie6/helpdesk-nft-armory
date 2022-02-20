@@ -300,6 +300,7 @@ export default defineComponent({
   width: 250px;
   height: 250px;
   margin: 16px;
+  word-wrap: break-word;
 }
 
 .display-answer {
@@ -310,6 +311,7 @@ export default defineComponent({
   margin-right: 16px;
   margin-bottom: 16px;
   margin-top: 0px;
+  word-wrap: break-word;
 }
 
 .display-answer-detail {
@@ -320,6 +322,7 @@ export default defineComponent({
   margin-right: 16px;
   margin-bottom: 16px;
   margin-top: 16px;
+  word-wrap: break-word;
 }
 
 .gmnh-question {
