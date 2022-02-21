@@ -51,29 +51,6 @@ async function retrieveMyQuestions(userWalletAddr: string): Promise<PNFT[]> {
             })
 }
 
-export async function uploadImage (img: string, walletAddr: PublicKey): Promise<string> {
-
-    const uploadImgUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'uploadImage';
-
-    const data = new FormData();
-    data.append('file', img);
-
-    const metadata = JSON.stringify({
-      name: `${walletAddr.toBase58()}.png`,
-    });
-    data.append('pinataMetadata', metadata);
-
-    const pinataOptions = JSON.stringify({
-      cidVersion: 0,
-    });
-    data.append('pinataOptions', pinataOptions);
-
-    const res = await axios.post(uploadImgUrl, data, { });
-
-    return res.data.IpfsHash;
-  };
-
-
   export async function createGMNHQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
 
     const createQuestionUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createQuestion';
