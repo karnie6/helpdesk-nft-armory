@@ -1,6 +1,6 @@
 <template>  
-  <tabs v-if="doMyQuestionsExist && (tabType == 'myQuestions')" direction="vertical" v-model="myQuestionList">
-      <tab v-for="(n, idx) in myQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)'>     
+  <tabs v-if="doMyQuestionsExist && (tabType == 'myQuestions')" direction="vertical" v-model="myQuestionList" @tabChanged="tabChanged">
+      <tab v-for="(n, idx) in myQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)' :mintId='readMintId(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked by you {{getFormattedDatePinned(n)}} </div>
@@ -11,8 +11,8 @@
     </tab>
    </tabs>
 
-    <tabs v-if="doOpenQuestionsExist && (tabType == 'openQuestions')" direction="vertical" v-model="openQuestionList" >
-      <tab v-for="(n, idx) in openQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)'>     
+    <tabs v-if="doOpenQuestionsExist && (tabType == 'openQuestions')" direction="vertical" v-model="openQuestionList" @tabChanged="tabChanged">
+      <tab v-for="(n, idx) in openQuestionList" :key="n.id" :id="idx" :title='readTicketName(n)' :mintId='readMintId(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}} </div>
@@ -22,8 +22,8 @@
     </tab>
    </tabs> 
 
-   <tabs v-if="doAnsweredQuestionsExist && (tabType == 'answeredQuestions')" direction="vertical" v-model="answeredQuestions">
-      <tab v-for="(n, idx) in answeredQuestions" :key="n.id" :id="idx" :title='readTicketName(n)'>     
+   <tabs v-if="doAnsweredQuestionsExist && (tabType == 'answeredQuestions')" direction="vertical" v-model="answeredQuestions" @tabChanged="tabChanged">
+      <tab v-for="(n, idx) in answeredQuestions" :key="n.id" :id="idx" :title='readTicketName(n)' :mintId='readMintId(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div>
@@ -51,9 +51,10 @@ import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import { PNFT } from '@/common/helpers/types';
 import QuestionItem from '@/components/QuestionItem.vue';
 import * as pnftInteractions from '@/composables/pnftInteractions'
-import { getOpenQuestionsFromGMNH, getAnsweredQuestionsFromGMNH, getMyQuestionsFromGMNH} from '@/composables/gmnh-service';
+import { getOpenQuestionsFromGMNH, getAnsweredQuestionsFromGMNH, getMyQuestionsFromGMNH, retrieveAnswersFromGMNH} from '@/composables/gmnh-service';
 
 const { isConnected, getWalletAddress } = getWallet();
+const answersToQuestion = ref<PNFT[]>([]); //answer(s) to one question
 const myQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const openQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const answeredQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
@@ -124,6 +125,8 @@ export default defineComponent({
   methods: {
       readTicketName: function(ticket: PNFT) {
       return pnftInteractions.readTicketName(ticket)
+    }, readMintId: function(ticket: PNFT) {
+      return pnftInteractions.readMintID(ticket);
     }, getImageUrl: function(ticket: PNFT) {
       return pnftInteractions.getImageURL(ticket)
     }, getQuestionId: function(ticket: PNFT) {
@@ -131,7 +134,7 @@ export default defineComponent({
     }, getIPFSHash: function(ticket: PNFT) {
       return pnftInteractions.readIPFSHash(ticket);  
     }, getAnswer: function(ticket: PNFT) {
-      return pnftInteractions.getAnswerText(ticket);
+      //return pnftInteractions.getAnswerText(ticket);
     }, getDescription: function(ticket: PNFT) {
       return pnftInteractions.readDescription(ticket);
     }, getUserName: function(ticket: PNFT) {
@@ -139,11 +142,23 @@ export default defineComponent({
     }, answerSubmitted: function () {
     }, getFormattedDatePinned: function(ticket: PNFT){
       return pnftInteractions.formatBylineTicketDatetime(pnftInteractions.readDatePinned(ticket));
-    },
+    }, tabChanged: function (index:Number, mintId: string) {
+      console.log('here ', mintId);
+      this.areAnswersLoading = true;
+
+      retrieveAnswersFromGMNH(mintId).then((answers) => {
+              answersToQuestion.value = answers;
+      }); 
+
+      this.areAnswersLoading = true;
+    }
   },
   onUpdated() {
   },
   setup(props) {
+
+    const areAnswersLoading = ref<boolean>(false);
+
     //fetch initially so that there isn't lag for first tab open
     if (props.tabType && props.tabType == 'myQuestions') {
 
@@ -165,7 +180,8 @@ export default defineComponent({
     return {
       myQuestionList: myQuestions,
       openQuestionList: openQuestions,
-      answeredQuestions: answeredQuestions
+      answeredQuestions: answeredQuestions,
+      areAnswersLoading: areAnswersLoading
     }; 
   },
 });
