@@ -68,7 +68,7 @@ export default defineComponent({
       if (e.ctrlKey || e.metaKey) {
         if (parseInt(e.key) - 1 in tabs.value) {
           e.preventDefault();
-          switchTab(e, parseInt(e.key) - 1, tabs.value[parseInt(e.key) - 1]);
+          switchTab(e, parseInt(e.key) - 1, tabs.value[parseInt(e.key) - 1],"");
         }
       }
     };
@@ -77,10 +77,10 @@ export default defineComponent({
       selectedIndex.value = 0;
     };
 
-    const switchTab = (_: any, index: number, isDisabled: boolean) => {
+    const switchTab = (_: any, index: number, isDisabled: boolean, mintId: string) => {
       if (!isDisabled) {
         selectedIndex.value = index;
-        emit('tabChanged', index);
+        emit('tabChanged', index, mintId);
       }
     };
 
@@ -170,6 +170,7 @@ export default defineComponent({
           title?: string;
           "title-slot"?: string;
           disabled?: boolean | string;
+          mintId?: string;
         };
 
         const titleContent = _tabProps["title-slot"]
@@ -188,8 +189,9 @@ export default defineComponent({
               role: "tabItem",
               "aria-selected": selectedIndex.value === index ? "true" : "false",
               "aria-disabled": isDisabled ? "true" : "false",
+              "mintId" : _tabProps.mintId,
               onClick: (e: MouseEvent) => {
-                switchTab(e, index, isDisabled);
+                switchTab(e, index, isDisabled, _tabProps.mintId!);
               },
             },
             titleContent

@@ -75,7 +75,7 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
     */
      const attr_key = 'mintId'
      let attr = ticket.metadata.keyvalues.hasOwnProperty(attr_key) ? ticket.metadata.keyvalues[attr_key] : undefined
-     return typeof attr != 'undefined' ? attr : "Attribute Not Set"
+     return typeof attr != 'undefined' ? attr : ""
   };
 
   export function getImageURL (ticket: PNFT) {
@@ -106,7 +106,7 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
     };
 
  export function needsToBeAnswered (ticket: PNFT) {
-   return (readTicketType(ticket) == 'question' && readTicketStatus(ticket) == 'open');   
+   return (readTicketType(ticket) == 'question');   
  }
 
   export function readUserID (ticket: PNFT) {

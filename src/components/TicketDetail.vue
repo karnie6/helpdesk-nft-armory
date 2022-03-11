@@ -5,15 +5,18 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 5px solid #219653;"/>
-            <div v-if="!needsToBeAnswered(n)" class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
+
+            <div v-for="(a, idx) in answersToQuestion" :key="a.id" :id="idx">
+                <hr style="border: 5px solid #219653;"/>
+                <div class="gmnh-tab-content-status">{{readTicketName(a)}}</div>
+              </div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
-            <div v-else-if="!isConnected" style="margin: 0 auto;">
+            <div v-if="!isConnected" style="margin: 0 auto;">
                     <span class="wallet-text" style="justify-content: center; display: flex; margin-top: 16px;">Connect your Solana wallet to answer this question!</span>
                   <!--  <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </div>
-            <div v-else>
+            <div v-else-if="needsToBeAnswered(n)">
               <IWantUrNFTForm :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" :fromQuestionDetail="true"/>
             </div>
       </div>
@@ -37,12 +40,14 @@ import NFTViewCard from '@/components/NFTViewCard.vue';
 import ConfigPane from '@/components/ConfigPane.vue';
 import useCluster, { Cluster } from '@/composables/cluster';
 import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
-import usePinata from '@/composables/pinata';
 import * as pnftInteractions from '@/composables/pnftInteractions';
 import { PNFT } from '@/common/helpers/types';
+import { retrieveAnswersFromGMNH, retrieveMintFromGMNH} from '@/composables/gmnh-service';
+
 
 const question = ref<PNFT[]>([]); // this is everything fetched in mem
 
+const answersToQuestion = ref<PNFT[]>([]); //answer(s) to one question
 const ticket = ref<INFT | null>(null);
 const ticketID = ref<string | null>(null);
 const errorFinding = ref<boolean>(false);
@@ -82,17 +87,7 @@ export default defineComponent({
 
     //todo: temporary, but set to DEV for now
     const { cluster, setCluster, getClusterURL } = useCluster();
-    /*
-    const chosenCluster = computed({
-      get() {
-        return cluster.value;
-      },
-      set(newVal: Cluster) {
-        setCluster(newVal);
-      },
-    }); */
-    //setCluster(Cluster.Devnet);
-
+  
     const { isConnected, getWalletAddress } = getWallet();
     const { error, clearError, setError } = useError();
 
@@ -106,13 +101,16 @@ export default defineComponent({
       if (goTicketID !== undefined || goTicketID !== null) {
           ticketID.value = goTicketID as any as string;
 
-          const { retrieveByMintId} = usePinata();
-
-          retrieveByMintId(ticketID.value!) 
+          retrieveMintFromGMNH(ticketID.value!) 
           .then((pinataTickets) => {
             
           if (pinataTickets.length && pinataTickets.length == 1) {
             question.value = pinataTickets;
+
+          //load answers
+          retrieveAnswersFromGMNH(ticketID.value!).then((answers) => {
+                  answersToQuestion.value = answers;
+          });  
         } else {
           errorFinding.value = true;
             //TODO: add error message
@@ -130,7 +128,8 @@ export default defineComponent({
          isConnected,
         ticketID: ticketID,
         question: question,
-        errorFinding
+        errorFinding,
+        answersToQuestion: answersToQuestion
         };
   
   },
