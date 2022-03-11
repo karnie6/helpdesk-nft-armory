@@ -5,8 +5,13 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked by you {{getFormattedDatePinned(n)}} </div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 5px solid #219653;"/>
-            <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
+            
+            <div v-if="!areAnswersLoading">
+              <div v-for="(a, idx) in answersToQuestion" :key="a.id" :id="idx">
+                <hr style="border: 5px solid #219653;"/>
+                <div class="gmnh-tab-content-status">{{readTicketName(a)}}</div>
+              </div>
+            </div>
         </div> 
     </tab>
    </tabs>
@@ -17,7 +22,7 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}} </div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <IWantUrNFTForm @answer-submitted="answerSubmitted" :is-question=false :fromQuestionDetail=false :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" v-bind:updateOpenQuestions="updateOpenQuestions"/>        
+            <IWantUrNFTForm @answer-submitted="answerSubmitted" :is-question=false :fromQuestionDetail=false v-bind:clearAskQuestion="clearAskQuestion" :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" v-bind:updateOpenQuestions="updateOpenQuestions"/>        
         </div> 
     </tab>
    </tabs> 
@@ -28,8 +33,16 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-            <hr style="border: 5px solid #219653;"/>
-            <div class="gmnh-tab-content-status">{{getAnswer(n)}}</div>
+            
+            <div v-if="!areAnswersLoading">
+              <div v-for="(a, idx) in answersToQuestion" :key="a.id" :id="idx">
+                <hr style="border: 5px solid #219653;"/>
+                <div class="gmnh-tab-content-status">{{readTicketName(a)}}</div>
+              </div>
+            </div>
+
+            <IWantUrNFTForm @answer-submitted="answerSubmitted" :is-question=false :fromQuestionDetail=false v-bind:clearAskQuestion="clearAskQuestion" :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" v-bind:updateOpenQuestions="updateOpenQuestions"/>        
+
         </div> 
     </tab>
    </tabs>
@@ -54,6 +67,7 @@ import * as pnftInteractions from '@/composables/pnftInteractions'
 import { getOpenQuestionsFromGMNH, getAnsweredQuestionsFromGMNH, getMyQuestionsFromGMNH, retrieveAnswersFromGMNH} from '@/composables/gmnh-service';
 
 const { isConnected, getWalletAddress } = getWallet();
+const clearAskQuestion = ref<Boolean>(false);
 const answersToQuestion = ref<PNFT[]>([]); //answer(s) to one question
 const myQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const openQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
@@ -73,6 +87,13 @@ export default defineComponent({
         if (newValue) {
              getMyQuestionsFromGMNH(getWalletAddress()!.toBase58()).then((myQuestionsFromGMNH) => {
               myQuestions.value = myQuestionsFromGMNH;
+
+              if (myQuestionsFromGMNH.length > 0 && myQuestionsFromGMNH[0].metadata && myQuestionsFromGMNH[0].metadata.keyvalues) {
+                //fetch answers for first item
+                retrieveAnswersFromGMNH(myQuestionsFromGMNH[0].metadata.keyvalues.mintId).then((answers) => {
+                  answersToQuestion.value = answers;
+                });  
+              }
             });
         }
       }
@@ -95,6 +116,13 @@ export default defineComponent({
         if (newValue) {
             getAnsweredQuestionsFromGMNH().then((answeredQuestionsFromGMNH) => {
               answeredQuestions.value = answeredQuestionsFromGMNH;
+
+            if (answeredQuestionsFromGMNH.length > 0 && answeredQuestionsFromGMNH[0].metadata && answeredQuestionsFromGMNH[0].metadata.keyvalues) {
+                //fetch answers for first item
+                retrieveAnswersFromGMNH(answeredQuestionsFromGMNH[0].metadata.keyvalues.mintId).then((answers) => {
+                  answersToQuestion.value = answers;
+                });  
+              }  
           });
         }
       }
@@ -143,14 +171,15 @@ export default defineComponent({
     }, getFormattedDatePinned: function(ticket: PNFT){
       return pnftInteractions.formatBylineTicketDatetime(pnftInteractions.readDatePinned(ticket));
     }, tabChanged: function (index:Number, mintId: string) {
-      console.log('here ', mintId);
       this.areAnswersLoading = true;
 
       retrieveAnswersFromGMNH(mintId).then((answers) => {
               answersToQuestion.value = answers;
       }); 
 
-      this.areAnswersLoading = true;
+      this.areAnswersLoading = false;
+      clearAskQuestion.value = true;
+
     }
   },
   onUpdated() {
@@ -164,7 +193,7 @@ export default defineComponent({
 
       getMyQuestionsFromGMNH(getWalletAddress()!.toBase58()).then((myQuestionsFromGMNH) => {
               myQuestions.value = myQuestionsFromGMNH;
-      }); 
+      });
 
     } else if (props.tabType && props.tabType == 'openQuestions') {
       getOpenQuestionsFromGMNH().then((openQuestionsFromGMNH) => {
@@ -181,8 +210,10 @@ export default defineComponent({
       myQuestionList: myQuestions,
       openQuestionList: openQuestions,
       answeredQuestions: answeredQuestions,
-      areAnswersLoading: areAnswersLoading
-    }; 
+      answersToQuestion: answersToQuestion,
+      areAnswersLoading: areAnswersLoading,
+      clearAskQuestion: clearAskQuestion
+     }; 
   },
 });
 </script>

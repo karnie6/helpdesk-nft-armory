@@ -16,8 +16,8 @@
         </button>
       </form>
       <form v-if="!isQuestion && !isLoading" @submit.prevent="createAnswer" class="flex-grow">
-        <div v-if="!fromQuestionDetail"><textarea focus-visible type="text" id="nftName" placeholder="Write answer here:" class="nes-input gmnh-answer" v-model="nftName" /></div>
-        <div v-else><textarea focus-visible type="text" id="nftName" placeholder="Write answer here:" class="nes-input gmnh-answer-detail" v-model="nftName" /></div>
+        <div v-if="!fromQuestionDetail"><textarea focus-visible type="text" id="nftName" placeholder="Add answer.." class="nes-input gmnh-answer" v-model="nftName" /></div>
+        <div v-else><textarea focus-visible type="text" id="nftName" placeholder="Add answer.." class="nes-input gmnh-answer-detail" v-model="nftName" /></div>
         <button v-if="!fromQuestionDetail"
           class="gmnh-answer-submit"
           :class="{ 'is-disabled': isLoading || !isConnected }"
