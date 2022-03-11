@@ -90,7 +90,7 @@ import useModal from '@/composables/modal';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { createGMNHQuestion, createGMNHAnswer} from '@/composables/gmnh-service';
+import { createGMNHQuestion, createGMNHAnswer, retrieveMintFromGMNH} from '@/composables/gmnh-service';
 
 
 export default defineComponent({
@@ -154,21 +154,6 @@ export default defineComponent({
     const { isConnected, getWalletAddress } = getWallet();
     const { clearError, setError } = useError();
 
-    const { retrieveByMintId } = usePinata();
-
-    //This is the HelpDesk treasury wallet (9px36ZsECEdSbNAobezC77Wr9BfACenRN1W8X7AUuWAb) where all NFTs will be minted to
-    //todo figure out way to not dox private key
-    const helpDeskWallet = new NodeWallet(
-      Keypair.fromSecretKey(
-        new Uint8Array([
-          247, 1, 238, 242, 163, 40, 18, 160, 99, 149, 90, 132, 55, 51, 84, 3, 211, 255, 176, 126,
-          122, 79, 119, 229, 169, 138, 219, 91, 40, 47, 96, 183, 131, 38, 5, 227, 24, 77, 6, 14,
-          158, 169, 248, 74, 231, 49, 207, 74, 241, 99, 23, 77, 11, 32, 122, 163, 63, 11, 211, 169,
-          249, 69, 52, 48,
-        ])
-      )
-    );
-
     const reset = () => {
       isLoading.value = true;
       isCreated.value = false;
@@ -216,7 +201,7 @@ export default defineComponent({
             let questionUserIDWallet = undefined
             let ticketLink = formatTicketDetailLink(props.questionID, DEFAULTS.APP_URL)
 
-            retrieveByMintId(props.questionID) 
+            retrieveMintFromGMNH(props.questionID) 
                 .then((pinataTickets) => {
 
                 if (pinataTickets.length && pinataTickets.length == 1) {

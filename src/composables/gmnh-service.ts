@@ -67,6 +67,22 @@ async function retrieveAnswers(questionMintId: string): Promise<PNFT[]> {
     })
 }
 
+export async function retrieveMintFromGMNH(mintId: string): Promise<PNFT[]> {
+    const pnfts = await retrieveMint(mintId);
+    return pnfts;
+}
+
+async function retrieveMint(mintId: string): Promise<PNFT[]> {
+    let getMintUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'mint' + '/' + mintId;
+    
+    return fetch(getMintUrl)
+            // the JSON body is taken from the response
+            .then(res => res.json())
+            .then(res => {
+                return res as PNFT[]
+    })
+}
+
   export async function createGMNHQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
 
     const createQuestionUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createQuestion';

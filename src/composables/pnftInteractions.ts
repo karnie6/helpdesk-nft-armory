@@ -106,7 +106,7 @@ export function generateTicketDetailLink(ticket: PNFT, appUrl?: string)  {
     };
 
  export function needsToBeAnswered (ticket: PNFT) {
-   return (readTicketType(ticket) == 'question' && readTicketStatus(ticket) == 'open');   
+   return (readTicketType(ticket) == 'question');   
  }
 
   export function readUserID (ticket: PNFT) {
