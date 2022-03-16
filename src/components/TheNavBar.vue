@@ -13,6 +13,9 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
           <div class="d-flex">
             <div class="d-flex align-items-center">
+              <a class="fs-6 text-decoration-none primary-color" style="padding-right: 20px" target="_blank" href="https://discord.gg/CT9KtEfn6V">Join Community</a>
+            </div>
+            <div class="d-flex align-items-center">
               <ConfigPane />
             </div>
           </div>
@@ -26,14 +29,14 @@ import { defineComponent, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import NavButton from '@/components/NavButton.vue';
 import ConfigPane from './ConfigPane.vue';
-import useWallet from '../composables/wallet';
+import getWallet from '../composables/wallet';
 
 export default defineComponent({
   components: { NavButton, ConfigPane },
   setup() {
     const route = useRoute();
     const path = computed(() => route.path);
-    const { isConnected, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = getWallet();
 
     return {
       path,
