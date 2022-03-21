@@ -30,7 +30,6 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from 'vue';
 // @ts-ignore
-import { PublicKey } from '@solana/web3.js';
 
 import getWallet from '@/composables/wallet';
 import useError from '@/composables/error';
@@ -43,7 +42,6 @@ import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import * as pnftInteractions from '@/composables/pnftInteractions';
 import { PNFT } from '@/common/helpers/types';
 import { retrieveAnswersFromGMNH, retrieveMintFromGMNH} from '@/composables/gmnh-service';
-
 
 const question = ref<PNFT[]>([]); // this is everything fetched in mem
 
