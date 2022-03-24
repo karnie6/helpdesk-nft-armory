@@ -122,4 +122,34 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
   };
 
 
+ export async function addUserInfoAirtable(userWalletAddress: string, userEmailAddress: string): Promise<boolean> {
+    /* Input: user wallet address & user email address
+       Output: boolean of whether user has been successfully added to Airtable
+    */
+    const addUserInfoAirtableUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'addUserInfoAirtable/';
+  
+    const data = new FormData();
+    data.append('userWalletAddress', userWalletAddress);
+    data.append('userEmailAddress', userEmailAddress);
 
+    console.log("data is ", data)
+    const result = await axios.post(addUserInfoAirtableUrl, data, { });
+
+    return result.data;
+ }
+
+  export async function notifyGMNHUser(userWalletAddress: string, emailType: string, questionLink: string): Promise<boolean> {
+    /* Input: user wallet address & email type & question link that was answered
+       Output: boolean of whether user has been successfully notified
+    */
+    const notifyGMNHUserUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'notifyGMNHUser/';
+  
+    const data = new FormData();
+    data.append('userWalletAddress', userWalletAddress);
+    data.append('emailType', emailType);
+    data.append('questionLink', questionLink);
+
+    const result = await axios.post(notifyGMNHUserUrl, data, { });
+
+    return result.data;
+ }

@@ -87,10 +87,9 @@ import NFTViewCard from '@/components/NFTViewCard.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
 import ContentTooltipIWantUrNFT from '@/components/content/tooltip/ContentTooltipIWantUrNFT.vue';
 import useModal from '@/composables/modal';
-import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { createGMNHQuestion, createGMNHAnswer} from '@/composables/gmnh-service';
+import { createGMNHQuestion, createGMNHAnswer, notifyGMNHUser} from '@/composables/gmnh-service';
 
 
 export default defineComponent({
@@ -221,7 +220,7 @@ export default defineComponent({
 
                 if (pinataTickets.length && pinataTickets.length == 1) {
                   questionUserIDWallet = getQuestionUserWalletId(pinataTickets[0]);
-                  notifyGMNHUser(questionUserIDWallet.toString(), emailTypeAnswered, ticketLink)
+                  notifyGMNHUser(questionUserIDWallet, emailTypeAnswered, ticketLink)
               }
             }) 
       

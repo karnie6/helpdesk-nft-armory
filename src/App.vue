@@ -104,8 +104,7 @@ import TheMobileCover from '@/components/TheMobileCover.vue';
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
 import useWallet from './composables/wallet';
-import {addEmailAddress} from './composables/airtable';
-import {checkHasUserBeenAsked} from '@/composables/gmnh-service';
+import {checkHasUserBeenAsked, addUserInfoAirtable} from '@/composables/gmnh-service';
 
 const clearAskQuestion = ref<Boolean>(false);
 const updateMyQuestions = ref<Boolean>(false);
@@ -173,7 +172,7 @@ export default defineComponent({
     const enterEmail = async () => {
       if (isConnected.value) {
 
-        addEmailAddress(getWalletAddress()!.toBase58(), emailAddress.value).
+        addUserInfoAirtable(getWalletAddress()!.toBase58().toString(), emailAddress.value).
             then(async (result) => {
               //once email address has been added, set value to true so we can update modal
               emailSubmitted.value = true;
