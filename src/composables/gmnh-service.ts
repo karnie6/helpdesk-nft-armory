@@ -84,9 +84,10 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
     data.append('description', description);
     data.append('userWalletAddr', walletAddr.toBase58());
 
+    console.log("url is ", createQuestionUrl)
     //TODO: ADD ERROR HANDLING
     const res = await axios.post(createQuestionUrl, data, { });
-
+    
     return res.data;
   };
 
@@ -138,18 +139,16 @@ export async function uploadImage (img: string, walletAddr: PublicKey): Promise<
     return result.data;
  }
 
-  export async function notifyGMNHUser(userWalletAddress: string, emailType: string, questionLink: string): Promise<boolean> {
+  export async function getGMNHUserEmailAddress(userWalletAddress: string): Promise<string> {
     /* Input: user wallet address & email type & question link that was answered
        Output: boolean of whether user has been successfully notified
     */
-    const notifyGMNHUserUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'notifyGMNHUser/';
+    const GMNHUserEmailAddressUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'getGMNHUserEmailAddress/';
   
     const data = new FormData();
     data.append('userWalletAddress', userWalletAddress);
-    data.append('emailType', emailType);
-    data.append('questionLink', questionLink);
 
-    const result = await axios.post(notifyGMNHUserUrl, data, { });
+    const result = await axios.post(GMNHUserEmailAddressUrl, data, { });
 
     return result.data;
  }
