@@ -1,6 +1,5 @@
 import { DEFAULTS } from "@/globals";
 import emailjs from '@emailjs/browser/';
-import axios from "axios";
 
 const gmnhEmailHandle = DEFAULTS.GMNH_EMAIL_HANDLE
 const emailjsServiceId = DEFAULTS.EMAILJS_SERVICE_ID;
