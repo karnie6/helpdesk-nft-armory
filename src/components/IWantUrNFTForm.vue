@@ -16,8 +16,8 @@
         </button>
       </form>
       <form v-if="!isQuestion && !isLoading" @submit.prevent="createAnswer" class="flex-grow">
-        <div v-if="!fromQuestionDetail"><textarea focus-visible type="text" id="nftName" placeholder="Write answer here:" class="nes-input gmnh-answer" v-model="nftName" /></div>
-        <div v-else><textarea focus-visible type="text" id="nftName" placeholder="Write answer here:" class="nes-input gmnh-answer-detail" v-model="nftName" /></div>
+        <div v-if="!fromQuestionDetail"><textarea focus-visible type="text" id="nftName" placeholder="Add answer.." class="nes-input gmnh-answer" v-model="nftName" /></div>
+        <div v-else><textarea focus-visible type="text" id="nftName" placeholder="Add answer.." class="nes-input gmnh-answer-detail" v-model="nftName" /></div>
         <button v-if="!fromQuestionDetail"
           class="gmnh-answer-submit"
           :class="{ 'is-disabled': isLoading || !isConnected }"
@@ -76,7 +76,7 @@ import { PublicKey, Keypair } from '@solana/web3.js';
 import { NodeWallet } from '@metaplex/js';
 import {DEFAULTS} from '@/globals'
 import usePinata from '@/composables/pinata';
-import useWallet from '@/composables/wallet';
+import getWallet from '@/composables/wallet';
 import useError from '@/composables/error';
 import { IMintResult, INFT } from '@/common/helpers/types';
 import StdNotifications from '@/components/StdNotifications.vue';
@@ -89,7 +89,7 @@ import ContentTooltipIWantUrNFT from '@/components/content/tooltip/ContentToolti
 import useModal from '@/composables/modal';
 import {getQuestionUserWalletId, formatTicketDetailLink} from '@/composables/pnftInteractions';
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailNotifications';
-import { createGMNHQuestion, createGMNHAnswer, getGMNHUserEmailAddress} from '@/composables/gmnh-service';
+import { createGMNHQuestion, createGMNHAnswer, getGMNHUserEmailAddress, retrieveMintFromGMNH} from '@/composables/gmnh-service';
 import {notifyGMNHUser} from '@/composables/emailNotifications';
 
 export default defineComponent({
@@ -150,10 +150,8 @@ export default defineComponent({
 
     const canvasIdentifier = computed(() => {return "canvas-" + props.hash});
 
-    const { isConnected, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = getWallet();
     const { clearError, setError } = useError();
-
-    const { retrieveByMintId } = usePinata();
 
     //This is the HelpDesk treasury wallet (9px36ZsECEdSbNAobezC77Wr9BfACenRN1W8X7AUuWAb) where all NFTs will be minted to
     //todo figure out way to not dox private key
@@ -214,7 +212,7 @@ export default defineComponent({
             let questionUserIDWallet = undefined
             let ticketLink = formatTicketDetailLink(props.questionID, DEFAULTS.APP_URL)
 
-            retrieveByMintId(props.questionID) 
+            retrieveMintFromGMNH(props.questionID) 
                 .then((pinataTickets) => {
 
                 if (pinataTickets.length && pinataTickets.length == 1) {
@@ -306,6 +304,7 @@ export default defineComponent({
   width: 250px;
   height: 250px;
   margin: 16px;
+  word-wrap: break-word;
 }
 
 .display-answer {
@@ -316,6 +315,7 @@ export default defineComponent({
   margin-right: 16px;
   margin-bottom: 16px;
   margin-top: 0px;
+  word-wrap: break-word;
 }
 
 .display-answer-detail {
@@ -326,6 +326,7 @@ export default defineComponent({
   margin-right: 16px;
   margin-bottom: 16px;
   margin-top: 16px;
+  word-wrap: break-word;
 }
 
 .gmnh-question {

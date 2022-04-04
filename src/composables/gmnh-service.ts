@@ -93,7 +93,6 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
     data.append('description', description);
     data.append('userWalletAddr', walletAddr.toBase58());
 
-    console.log("url is ", createQuestionUrl)
     //TODO: ADD ERROR HANDLING
     const res = await axios.post(createQuestionUrl, data, { });
     

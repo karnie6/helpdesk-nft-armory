@@ -55,18 +55,6 @@ export function sendEmail(userEmailAddress: string, emailType: string, questionL
     };
   }
 
-
-  console.log(templateParams)
-
-  const emailData = {
-    service_id: emailjsServiceId,
-    template_id: emailjsTemplateId,
-    user_id: emailjsUserId,
-    template_params: JSON.stringify(templateParams)
-  };
-
-
-
   emailjs.send(emailjsServiceId, emailjsTemplateId, templateParams, emailjsUserId)
     .then(function (response) {
     }, function (error) {
