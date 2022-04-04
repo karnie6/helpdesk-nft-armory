@@ -35,18 +35,13 @@
       <!-- tabs -->
       <div v-if="$route.name !== 'Ticket Details'" class="container mt-3">
         <tabs @tabChanged="tabChanged">
-          <tab title="Trending Questions">
-              <section class="wallet-text">
-                This section (coming soon!) will feature our top answered questions...
-              </section>
-          </tab>
           <tab title="Ask a Question" >
                   <section v-if="isConnected" class="mt-3">
                     <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion"/>
                   </section>
                   <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
                   </section>
           </tab>
@@ -55,8 +50,8 @@
               <QuestionList tabType="myQuestions" v-bind:updateMyQuestions="updateMyQuestions" />
             </section>
             <section v-else class="gmnh-wallet-center">
-                    <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                    <span class="wallet-text">Connect your Solana wallet to view your questions.</span>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
@@ -65,8 +60,8 @@
               <QuestionList tabType="openQuestions" v-bind:updateOpenQuestions="updateOpenQuestions"/>
             </section>
             <section v-else class="gmnh-wallet-center">
-                    <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                    <span class="wallet-text">Connect your Solana wallet to answer a question!</span>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
@@ -75,8 +70,8 @@
               <QuestionList tabType="answeredQuestions" v-bind:updateAnsweredQuestions="updateAnsweredQuestions"/>
             </section>
             <section v-else class="gmnh-wallet-center">
-                    <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                    <ConfigPane/>
+                    <span class="wallet-text">Connect your Solana wallet to answer a question!</span>
+                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
@@ -103,8 +98,9 @@ import TheMobileCover from '@/components/TheMobileCover.vue';
 
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
-import useWallet from './composables/wallet';
 import {checkHasUserBeenAsked, addUserInfoAirtable} from '@/composables/gmnh-service';
+import getWallet from './composables/wallet';
+
 
 const clearAskQuestion = ref<Boolean>(false);
 const updateMyQuestions = ref<Boolean>(false);
@@ -113,7 +109,7 @@ const updateAnsweredQuestions = ref<Boolean>(false);
 const shouldShowEmailModal = ref<Boolean>(false);
 const emailSubmitted = ref<Boolean>(false);
 
-const { isConnected, getWallet, getWalletAddress } = useWallet();
+const { isConnected, getWalletAddress } = getWallet();
 
 const emailAddress = ref('');
 
@@ -122,23 +118,23 @@ export default defineComponent({
 
   methods: {
     tabChanged: function (index:Number) {
-      if (index == 1) {
+      if (index == 0) {
         clearAskQuestion.value = true;
         updateMyQuestions.value = false;
         updateOpenQuestions.value = false;
         updateAnsweredQuestions.value = false;
       }
-      if (index == 2) {
+      if (index == 1) {
         clearAskQuestion.value = false;
         updateMyQuestions.value = true;
         updateOpenQuestions.value = false;
         updateAnsweredQuestions.value = false;
-      } else if (index == 3) {
+      } else if (index == 2) {
         clearAskQuestion.value = false;
         updateMyQuestions.value = false;
         updateOpenQuestions.value = true;
         updateAnsweredQuestions.value = false;
-      } else if (index == 4) {
+      } else if (index == 3) {
         clearAskQuestion.value = false;
         updateMyQuestions.value = false;
         updateOpenQuestions.value = false;
@@ -151,7 +147,7 @@ export default defineComponent({
       immediate: true,
       deep: true,
       handler(newValue, oldValue) {
-        if (newValue) {
+        if (newValue && isConnected) {
             checkHasUserBeenAsked(getWalletAddress()!.toBase58()).
             then(async (result) => {
               //if the user has been asked, then we should not show email (that's why its the opposite)
@@ -170,7 +166,7 @@ export default defineComponent({
     onUnmounted(() => window.removeEventListener('resize', onWidthChange));
 
     const enterEmail = async () => {
-      if (isConnected.value) {
+      if (isConnected) {
 
         addUserInfoAirtable(getWalletAddress()!.toBase58().toString(), emailAddress.value).
             then(async (result) => {
@@ -185,6 +181,7 @@ export default defineComponent({
     return {
       windowWidth,
       isConnected,
+      getWalletAddress,
       clearAskQuestion,
       updateMyQuestions,
       updateOpenQuestions,

@@ -150,7 +150,7 @@ export default defineComponent({
 
     const canvasIdentifier = computed(() => {return "canvas-" + props.hash});
 
-    const { isConnected, getWallet, getWalletAddress } = useWallet();
+    const { isConnected, getWalletAddress } = useWallet();
     const { clearError, setError } = useError();
 
     const { retrieveByMintId } = usePinata();
@@ -177,7 +177,6 @@ export default defineComponent({
     };
 
     // --------------------------------------- prep metadata    
-
     const generateImgQuestionForGMNHService = async () => {
       const canvas = await html2canvas(document.getElementById('canvas')!);
       return canvas.toDataURL('image/png');

@@ -51,28 +51,37 @@ async function retrieveMyQuestions(userWalletAddr: string): Promise<PNFT[]> {
             })
 }
 
-export async function uploadImage (img: string, walletAddr: PublicKey): Promise<string> {
+export async function retrieveAnswersFromGMNH(questionMintId: string): Promise<PNFT[]> {
+    const pnfts = await retrieveAnswers(questionMintId);
+    return pnfts;
+}
 
-    const uploadImgUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'uploadImage';
+async function retrieveAnswers(questionMintId: string): Promise<PNFT[]> {
+    let getAnswersUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'answers' + '/' + questionMintId;
+    
+    return fetch(getAnswersUrl)
+            // the JSON body is taken from the response
+            .then(res => res.json())
+            .then(res => {
+                return res as PNFT[]
+    })
+}
 
-    const data = new FormData();
-    data.append('file', img);
+export async function retrieveMintFromGMNH(mintId: string): Promise<PNFT[]> {
+    const pnfts = await retrieveMint(mintId);
+    return pnfts;
+}
 
-    const metadata = JSON.stringify({
-      name: `${walletAddr.toBase58()}.png`,
-    });
-    data.append('pinataMetadata', metadata);
-
-    const pinataOptions = JSON.stringify({
-      cidVersion: 0,
-    });
-    data.append('pinataOptions', pinataOptions);
-
-    const res = await axios.post(uploadImgUrl, data, { });
-
-    return res.data.IpfsHash;
-  };
-
+async function retrieveMint(mintId: string): Promise<PNFT[]> {
+    let getMintUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'mint' + '/' + mintId;
+    
+    return fetch(getMintUrl)
+            // the JSON body is taken from the response
+            .then(res => res.json())
+            .then(res => {
+                return res as PNFT[]
+    })
+}
 
   export async function createGMNHQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
 
