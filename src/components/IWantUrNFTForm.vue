@@ -87,11 +87,10 @@ import NFTViewCard from '@/components/NFTViewCard.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
 import ContentTooltipIWantUrNFT from '@/components/content/tooltip/ContentTooltipIWantUrNFT.vue';
 import useModal from '@/composables/modal';
-import {notifyGMNHUser} from '@/composables/airtable';
-import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
-import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { createGMNHQuestion, createGMNHAnswer, retrieveMintFromGMNH} from '@/composables/gmnh-service';
-
+import {getQuestionUserWalletId, formatTicketDetailLink} from '@/composables/pnftInteractions';
+import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailNotifications';
+import { createGMNHQuestion, createGMNHAnswer, getGMNHUserEmailAddress, retrieveMintFromGMNH} from '@/composables/gmnh-service';
+import {notifyGMNHUser} from '@/composables/emailNotifications';
 
 export default defineComponent({
   components: {
@@ -162,8 +161,7 @@ export default defineComponent({
       clearError();
     };
 
-    // --------------------------------------- prep metadata
-
+    // --------------------------------------- prep metadata    
     const generateImgQuestionForGMNHService = async () => {
       const canvas = await html2canvas(document.getElementById('canvas')!);
       return canvas.toDataURL('image/png');
@@ -206,7 +204,11 @@ export default defineComponent({
 
                 if (pinataTickets.length && pinataTickets.length == 1) {
                   questionUserIDWallet = getQuestionUserWalletId(pinataTickets[0]);
-                  notifyGMNHUser(questionUserIDWallet.toString(), emailTypeAnswered, ticketLink)
+                  getGMNHUserEmailAddress(questionUserIDWallet).then(async (userEmailAddress) =>
+                       {
+                         notifyGMNHUser(userEmailAddress, emailTypeAnswered, ticketLink);
+                       }
+                  )
               }
             }) 
       
@@ -221,8 +223,12 @@ export default defineComponent({
 
         if (typeof userWalletId != 'undefined' && typeof props.questionID != 'undefined'){
             let ticketLink = formatTicketDetailLink(props.questionID, DEFAULTS.APP_URL)
-            notifyGMNHUser(userWalletId, emailTypeResponder, ticketLink);
-        }else{
+            getGMNHUserEmailAddress(userWalletId).then(async (userEmailAddress) =>
+                       {
+                         notifyGMNHUser(userEmailAddress, emailTypeAnswered, ticketLink);
+                       }
+            )
+        } else{
         }
       
     }

@@ -95,12 +95,12 @@ import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import QuestionList from '@/components/QuestionList.vue';
 import TicketDetail from '@/components/TicketDetail.vue';
 import TheMobileCover from '@/components/TheMobileCover.vue';
-import {hasUserBeenAsked} from '@/composables/airtable';
 
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
+import {checkHasUserBeenAsked, addUserInfoAirtable} from '@/composables/gmnh-service';
 import getWallet from './composables/wallet';
-import {addEmailAddress} from './composables/airtable';
+
 
 const clearAskQuestion = ref<Boolean>(false);
 const updateMyQuestions = ref<Boolean>(false);
@@ -148,7 +148,7 @@ export default defineComponent({
       deep: true,
       handler(newValue, oldValue) {
         if (newValue && isConnected) {
-            hasUserBeenAsked(getWalletAddress()!.toBase58()).
+            checkHasUserBeenAsked(getWalletAddress()!.toBase58()).
             then(async (result) => {
               //if the user has been asked, then we should not show email (that's why its the opposite)
               shouldShowEmailModal.value = !result;
@@ -168,7 +168,7 @@ export default defineComponent({
     const enterEmail = async () => {
       if (isConnected) {
 
-        addEmailAddress(getWalletAddress()!.toBase58(), emailAddress.value).
+        addUserInfoAirtable(getWalletAddress()!.toBase58().toString(), emailAddress.value).
             then(async (result) => {
               //once email address has been added, set value to true so we can update modal
               emailSubmitted.value = true;
