@@ -141,7 +141,6 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
     data.append('userWalletAddress', userWalletAddress);
     data.append('userEmailAddress', userEmailAddress);
 
-    console.log("data is ", data)
     const result = await axios.post(addUserInfoAirtableUrl, data, { });
 
     return result.data;
