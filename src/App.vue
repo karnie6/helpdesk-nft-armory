@@ -125,7 +125,6 @@ import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
 import {checkHasUserBeenAsked, addUserInfoAirtable} from '@/composables/gmnh-service';
 import getWallet from './composables/wallet';
-import {addEmailAddress} from './composables/airtable';
 import {isWalletApproved} from './composables/gmnh-service'
 
 const isWalletApprovedFlag = ref<Boolean>(false);
