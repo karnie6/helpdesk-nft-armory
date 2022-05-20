@@ -3,33 +3,36 @@
       <div class="flex mt-10 text-white" style="background: #343A3F; ">
       <form v-if="isQuestion && !isLoading" @submit.prevent="createTicket" class="flex-grow">
 
-        <input focus-visible type="text" id="nftName" maxlength="255" placeholder="What's your question?" class="nes-input gmnh-question" v-model="nftName" />
+      <!--  <input focus-visible type="text" id="emailAddress" maxlength="255" placeholder="Enter email address..." class="nes-input gmnh-question" v-model="emailAddress" /> -->
+        <input for="email" focus-visible type="email" maxlength="255" placeholder="What's your email?" class="nes-input gmnh-question" v-model="emailAddress" />
+        <input type="text" id="nftName" maxlength="255" placeholder="What's your question?" class="nes-input gmnh-question" v-model="nftName" />
+
         <div><textarea type="text" id="description" placeholder="Add context/background..." class="nes-input gmnh-description" v-model="description" /></div>
 
         <button
           class="gmnh-question-submit"
-          :class="{ 'is-disabled': isLoading || !isConnected }"
-          :disabled="isLoading || !isConnected"
+          :class="{ 'is-disabled': isLoading }"
+          :disabled="isLoading"
           type="submit"
         >
-          Submit Question
+          Ask Question
         </button>
       </form>
-      <form v-if="!isQuestion && !isLoading" @submit.prevent="createAnswer" class="flex-grow">
+      <form v-if="!isQuestion && !isLoading && isWalletApprovedFlag" @submit.prevent="createAnswer" class="flex-grow">
         <div v-if="!fromQuestionDetail"><textarea focus-visible type="text" id="nftName" placeholder="Add answer.." class="nes-input gmnh-answer" v-model="nftName" /></div>
         <div v-else><textarea focus-visible type="text" id="nftName" placeholder="Add answer.." class="nes-input gmnh-answer-detail" v-model="nftName" /></div>
         <button v-if="!fromQuestionDetail"
           class="gmnh-answer-submit"
-          :class="{ 'is-disabled': isLoading || !isConnected }"
-          :disabled="isLoading || !isConnected"
+          :class="{ 'is-disabled': isLoading || !isConnected || !isWalletApprovedFlag }"
+          :disabled="isLoading || !isConnected || !isWalletApprovedFlag"
           type="submit"
         >
           Answer Question
         </button>
         <button v-else
           class="gmnh-answer-submit gmnh-answer-submit-detail"
-          :class="{ 'is-disabled': isLoading || !isConnected }"
-          :disabled="isLoading || !isConnected"
+          :class="{ 'is-disabled': isLoading || !isConnected || isWalletApprovedFlag }"
+          :disabled="isLoading || !isConnected || isWalletApprovedFlag"
           type="submit"
         >
           Answer Question
@@ -54,13 +57,13 @@
       </div>
     </NotifySuccess> -->
 
-      <div v-if="isQuestion" class="display display-canvas" id="canvas" :style="{ fontSize: `${textSize}px`} ">
+      <div v-if="isQuestion && !isLoading" class="display display-canvas" id="canvas" :style="{ fontSize: `${textSize}px`} ">
         <p>{{ nftName.substring(0,254) }}</p>
       </div>
-      <div v-else-if="!fromQuestionDetail" class=" display-answer display-canvas" v-bind:id="canvasIdentifier" :style="{ fontSize: `${textSize}px`} ">
+      <div v-else-if="!fromQuestionDetail && isWalletApprovedFlag" class=" display-answer display-canvas" v-bind:id="canvasIdentifier" :style="{ fontSize: `${textSize}px`} ">
         <p>{{ nftName.substring(0,254) }}</p>
       </div>
-      <div v-else class="display-answer-detail display-canvas" v-bind:id="canvasIdentifier" :style="{ fontSize: `${textSize}px`} ">
+      <div v-else-if="isWalletApprovedFlag" class="display-answer-detail display-canvas" v-bind:id="canvasIdentifier" :style="{ fontSize: `${textSize}px`} ">
         <p>{{ nftName.substring(0,254) }}</p>
       </div>
    
@@ -90,8 +93,12 @@ import useModal from '@/composables/modal';
 import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
-import { createGMNHQuestion, createGMNHAnswer, retrieveMintFromGMNH} from '@/composables/gmnh-service';
+import { createGMNHQuestion, createGMNHAnswer, retrieveMintFromGMNH, getQuestionEmailAddress} from '@/composables/gmnh-service';
+import { sendEmail } from "@/composables/emailjs";
+import {isWalletApproved} from '@/composables/gmnh-service'
 
+const isWalletApprovedFlag = ref<Boolean>(false);
+const { isConnected, getWalletAddress } = getWallet();
 
 export default defineComponent({
   components: {
@@ -122,6 +129,7 @@ export default defineComponent({
           this.isCreated = false;
           this.mintResult = null;
           this.nftName = '';
+          this.emailAddress = '';
           this.description = '';
         }
       }
@@ -138,6 +146,22 @@ export default defineComponent({
         }
       }
     },
+    isConnected: {
+      immediate: true,
+      deep: true,
+      handler(newValue, oldValue) {
+        if (newValue && isConnected) {
+            isWalletApproved(getWalletAddress()!.toBase58()).
+            then(async (result) => {
+              isWalletApprovedFlag.value = result;
+            });
+        }
+
+        if (!newValue) {
+          isWalletApprovedFlag.value = false;
+        }
+      }   
+  },
   },
   setup(props, { emit }) {
     const isLoading = ref<boolean>(false);
@@ -147,11 +171,11 @@ export default defineComponent({
     const contactDets = ref('BLANK');
     const textSize = ref(16);
     const nftName = ref('');
+    const emailAddress = ref('');
     const description = ref('');
 
     const canvasIdentifier = computed(() => {return "canvas-" + props.hash});
 
-    const { isConnected, getWalletAddress } = getWallet();
     const { clearError, setError } = useError();
 
     const reset = () => {
@@ -181,7 +205,7 @@ export default defineComponent({
       
       //create NFT
       const img = await generateImgQuestionForGMNHService();      
-      await createGMNHQuestion(img, nftName.value!, description.value!, getWalletAddress()! )
+      await createGMNHQuestion(img, nftName.value!, description.value!, emailAddress.value!, getWalletAddress()! )
       .then(async (result) => {
         mintResult.value = result;
         isCreated.value = true;
@@ -210,6 +234,24 @@ export default defineComponent({
               }
             }) 
       
+        }
+    } 
+
+    const sendEmailUpdateQuestionAskerAMA = async() => {
+      /*  Send email to question asker to let them know their question was answered
+          Flow: questionMintId-> GMNH Users Airtable
+      */
+        if (typeof props.questionID != 'undefined'){
+
+            let ticketLink = formatTicketDetailLink(props.questionID, DEFAULTS.APP_URL)
+
+            await getQuestionEmailAddress(props.questionID)
+            .then(async (result) => {
+                  sendEmail(result,emailTypeAnswered, ticketLink);
+            }).catch((e) => {
+              console.log('error sending email back to question asker', e);
+              setError(e);
+            });
         }
     } 
 
@@ -244,7 +286,8 @@ export default defineComponent({
       });
 
         // Email question asker about their question being answered
-        sendEmailUpdateQuestionAsker();
+        //sendEmailUpdateQuestionAsker();
+        sendEmailUpdateQuestionAskerAMA();
 
         // Email question responder about their answer
         // sendEmailUpdateQuestionResponder();
@@ -256,10 +299,12 @@ export default defineComponent({
 
     return {
       isConnected,
+      isWalletApprovedFlag,
       isCreated,
       isLoading,
       mintResult,
       newNFT,
+      emailAddress,
       // prep
       nftName,
       contactDets,
@@ -414,11 +459,8 @@ flex-grow: 0;
 }
 
 .gmnh-question-submit {
-  display: flex;
 flex-direction: row;
 align-items: flex-start;
-padding: 14px 20px;
-
 position: static;
 width: 169px;
 height: 47px;

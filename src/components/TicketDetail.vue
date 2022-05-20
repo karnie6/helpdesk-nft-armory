@@ -3,7 +3,7 @@
     <div v-if="doesQuestionExist && !errorFinding" direction="vertical" class="gmnh-detail">
       <div v-for="(n, idx) in question" :key="n.id" :id="idx">     
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
-            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div>
+            <div class="gmnh-tab-content-byline">Asked on {{getFormattedDatePinned(n)}}</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
 
             <div v-for="(a, idx) in answersToQuestion" :key="a.id" :id="idx">
@@ -12,10 +12,10 @@
               </div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
             <div v-if="!isConnected" style="margin: 0 auto;">
+                    <hr style="border: 5px solid #219653;"/>
                     <span class="wallet-text" style="justify-content: center; display: flex; margin-top: 16px;">Connect your Solana wallet to answer this question!</span>
-                  <!--  <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
-            </div>
+            </div> 
             <div v-else-if="needsToBeAnswered(n)">
               <IWantUrNFTForm :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" :fromQuestionDetail="true"/>
             </div>
@@ -85,12 +85,10 @@ export default defineComponent({
 
     //todo: temporary, but set to DEV for now
     const { cluster, setCluster, getClusterURL } = useCluster();
-  
     const { isConnected, getWalletAddress } = getWallet();
     const { error, clearError, setError } = useError();
 
     //grabbing ticketID from URL
-    
       const route = useRoute();
       const {
         ticketID: goTicketID

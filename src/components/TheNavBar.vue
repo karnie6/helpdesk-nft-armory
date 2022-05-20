@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg">
-      <div class="container">
-        <a class="fs-5 fw-bold text-decoration-none primary-color" href="/">GMneedhelp</a>
+      <div class="container" style="margin-left: 0px">
+        <a class="fs-5 fw-bold text-decoration-none primary-color" href="/">GMneedhelp's Crypto Concierge</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon">
             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" class="svg-inline--fa fa-bars fa-w-14 primary-color" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -13,7 +13,7 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
           <div class="d-flex">
             <div class="d-flex align-items-center">
-              <a class="fs-6 text-decoration-none primary-color" style="padding-right: 20px" target="_blank" href="https://discord.gg/CT9KtEfn6V">Join Community</a>
+              <a class="fs-6 text-decoration-none primary-color" style="padding-right: 20px" target="_blank" href="https://discord.gg/CT9KtEfn6V">Want to Answer Questions?</a>
             </div>
             <div class="d-flex align-items-center">
               <ConfigPane />
