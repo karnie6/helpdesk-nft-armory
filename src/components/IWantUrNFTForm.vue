@@ -90,7 +90,7 @@ import NFTViewCard from '@/components/NFTViewCard.vue';
 import ModalWindow from '@/components/ModalWindow.vue';
 import ContentTooltipIWantUrNFT from '@/components/content/tooltip/ContentTooltipIWantUrNFT.vue';
 import useModal from '@/composables/modal';
-import {notifyGMNHUser} from '@/composables/airtable';
+//import {notifyGMNHUser} from '@/composables/airtable';
 import {getQuestionUserWalletId, generateTicketDetailLink, formatTicketDetailLink} from '@/composables/pnftInteractions'
 import {emailTypeAnswered, emailTypeResponder} from '@/composables/emailjs'
 import { createGMNHQuestion, createGMNHAnswer, retrieveMintFromGMNH, getQuestionEmailAddress} from '@/composables/gmnh-service';
@@ -230,7 +230,7 @@ export default defineComponent({
 
                 if (pinataTickets.length && pinataTickets.length == 1) {
                   questionUserIDWallet = getQuestionUserWalletId(pinataTickets[0]);
-                  notifyGMNHUser(questionUserIDWallet.toString(), emailTypeAnswered, ticketLink)
+                 // notifyGMNHUser(questionUserIDWallet.toString(), emailTypeAnswered, ticketLink)
               }
             }) 
       
@@ -263,7 +263,7 @@ export default defineComponent({
 
         if (typeof userWalletId != 'undefined' && typeof props.questionID != 'undefined'){
             let ticketLink = formatTicketDetailLink(props.questionID, DEFAULTS.APP_URL)
-            notifyGMNHUser(userWalletId, emailTypeResponder, ticketLink);
+          //  notifyGMNHUser(userWalletId, emailTypeResponder, ticketLink);
         }else{
         }
       
