@@ -98,7 +98,7 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
     }
     //TODO: ADD ERROR HANDLING
     const res = await axios.post(createQuestionUrl, data, { });
-
+    
     return res.data;
   };
 
@@ -144,3 +144,44 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
 
 
 
+  export async function checkHasUserBeenAsked(userWalletAddress: string): Promise<boolean> {
+    /* Input: user wallet address
+       Output: boolean of whether user has been asked previously for email already
+    */
+    const hasUserBeenAskedUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'queryAirtableHasUserBeenAsked' + `/${userWalletAddress}`;
+
+    //TODO: ADD ERROR HANDLING
+    const result = await axios.get(hasUserBeenAskedUrl);
+
+    return result.data;
+  };
+
+
+ export async function addUserInfoAirtable(userWalletAddress: string, userEmailAddress: string): Promise<boolean> {
+    /* Input: user wallet address & user email address
+       Output: boolean of whether user has been successfully added to Airtable
+    */
+    const addUserInfoAirtableUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'addUserInfoAirtable/';
+  
+    const data = new FormData();
+    data.append('userWalletAddress', userWalletAddress);
+    data.append('userEmailAddress', userEmailAddress);
+
+    const result = await axios.post(addUserInfoAirtableUrl, data, { });
+
+    return result.data;
+ }
+
+  export async function getGMNHUserEmailAddress(userWalletAddress: string): Promise<string> {
+    /* Input: user wallet address & email type & question link that was answered
+       Output: boolean of whether user has been successfully notified
+    */
+    const GMNHUserEmailAddressUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'getGMNHUserEmailAddress/';
+  
+    const data = new FormData();
+    data.append('userWalletAddress', userWalletAddress);
+
+    const result = await axios.post(GMNHUserEmailAddressUrl, data, { });
+
+    return result.data;
+ }

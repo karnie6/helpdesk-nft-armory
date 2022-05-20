@@ -123,6 +123,7 @@ import TheMobileCover from '@/components/TheMobileCover.vue';
 
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
+import {checkHasUserBeenAsked, addUserInfoAirtable} from '@/composables/gmnh-service';
 import getWallet from './composables/wallet';
 import {addEmailAddress} from './composables/airtable';
 import {isWalletApproved} from './composables/gmnh-service'
@@ -206,7 +207,7 @@ export default defineComponent({
     const enterEmail = async () => {
       if (isConnected) {
 
-        addEmailAddress(getWalletAddress()!.toBase58(), emailAddress.value).
+        addUserInfoAirtable(getWalletAddress()!.toBase58().toString(), emailAddress.value).
             then(async (result) => {
               //once email address has been added, set value to true so we can update modal
               emailSubmitted.value = true;
