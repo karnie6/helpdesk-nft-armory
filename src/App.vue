@@ -1,11 +1,11 @@
 <template>
   <!-- no mobile -->
-  <TheMobileCover v-if="$isMobile()" />
+  <!--<TheMobileCover v-if="$isMobile()" /> -->
   <div class="relative h-full min-h-screen">
     <!--navbar + logo-->
     <TheNavBar />
       
-  <div v-if="isConnected && shouldShowEmailModal" class="modal" tabindex="-1" style="display: block">
+ <!-- <div v-if="isConnected && shouldShowEmailModal" class="modal" tabindex="-1" style="display: block">
   <div class="modal-dialog" style="margin-top: 200px;">
     <div class="modal-content">
       <div class="modal-header">
@@ -30,20 +30,21 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
       <!-- tabs -->
-      <div v-if="$route.name !== 'Ticket Details'" class="container mt-3">
+      <div v-if="$route.name !== 'Ticket Details' && isWalletApprovedFlag" class="container mt-3">
         <tabs @tabChanged="tabChanged">
-          <tab title="Ask a Question" >
-                  <section v-if="isConnected" class="mt-3">
+          <tab title="Ask a Crypto Question" >
+                  <section class="mt-3">
+                    <div v-if="clearAskQuestion" class="wallet-text">Ask any crypto question you have and get a high-quality response from our community of crypto experts emailed back to you ASAP (often in less than a hour)</div>
+                    <div v-if="clearAskQuestion" class="wallet-text">If you're brave, connect your wallet and earn a NFT commemorating your question!</div>
                     <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion"/>
                   </section>
-                  <section v-else class="gmnh-wallet-center">
+               <!--   <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
-                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
-                  </section>
+                  </section> -->
           </tab>
           <tab title="My Questions">
             <section v-if="isConnected">
@@ -65,15 +66,39 @@
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
-          <tab title="Answered Questions">
-            <section v-if="isConnected">
+          <tab title="See Answered Questions">
+            <section>
               <QuestionList tabType="answeredQuestions" v-bind:updateAnsweredQuestions="updateAnsweredQuestions"/>
             </section>
-            <section v-else class="gmnh-wallet-center">
+        <!--    <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to answer a question!</span>
-                   <!-- <ConfigPane/> -->
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
+            </section> -->
+          </tab>
+        </tabs>
+      </div>
+      <div v-else-if="$route.name !== 'Ticket Details' && !isWalletApprovedFlag" class="container mt-3">
+        <tabs @tabChanged="tabChanged">
+          <tab title="Ask a Crypto Question" >
+                  <section class="mt-3">
+                      <div class="wallet-text">Ask any crypto question you have and get a high-quality response from our community of crypto experts emailed back to you ASAP (often in less than a hour)</div>
+                    <div class="wallet-text">If you're brave, connect your wallet and earn a NFT commemorating your question!</div>
+
+                    <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion"/>
+                  </section>
+               <!--   <section v-else class="gmnh-wallet-center">
+                    <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
+                    <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
+                  </section> -->
+          </tab>
+          <tab title="See Answered Questions">
+            <section>
+              <QuestionList tabType="answeredQuestions" v-bind:updateAnsweredQuestions="updateAnsweredQuestions"/>
             </section>
+        <!--    <section v-else class="gmnh-wallet-center">
+                    <span class="wallet-text">Connect your Solana wallet to answer a question!</span>
+                    <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
+            </section> -->
           </tab>
         </tabs>
       </div>
@@ -95,13 +120,14 @@ import IWantUrNFTForm from '@/components/IWantUrNFTForm.vue';
 import QuestionList from '@/components/QuestionList.vue';
 import TicketDetail from '@/components/TicketDetail.vue';
 import TheMobileCover from '@/components/TheMobileCover.vue';
-import {hasUserBeenAsked} from '@/composables/airtable';
 
 import Tab from '@/components/Tab.vue';
 import Tabs from '@/components/Tabs.vue';
 import getWallet from './composables/wallet';
 import {addEmailAddress} from './composables/airtable';
+import {isWalletApproved} from './composables/gmnh-service'
 
+const isWalletApprovedFlag = ref<Boolean>(false);
 const clearAskQuestion = ref<Boolean>(false);
 const updateMyQuestions = ref<Boolean>(false);
 const updateOpenQuestions = ref<Boolean>(false);
@@ -125,10 +151,18 @@ export default defineComponent({
         updateAnsweredQuestions.value = false;
       }
       if (index == 1) {
+        //since only two tabs when
+        if (isWalletApprovedFlag) {
+          clearAskQuestion.value = false;
+          updateMyQuestions.value = false;
+          updateOpenQuestions.value = false;
+          updateAnsweredQuestions.value = true;
+        } else {
         clearAskQuestion.value = false;
         updateMyQuestions.value = true;
         updateOpenQuestions.value = false;
         updateAnsweredQuestions.value = false;
+        }
       } else if (index == 2) {
         clearAskQuestion.value = false;
         updateMyQuestions.value = false;
@@ -148,11 +182,15 @@ export default defineComponent({
       deep: true,
       handler(newValue, oldValue) {
         if (newValue && isConnected) {
-            hasUserBeenAsked(getWalletAddress()!.toBase58()).
+            isWalletApproved(getWalletAddress()!.toBase58()).
             then(async (result) => {
-              //if the user has been asked, then we should not show email (that's why its the opposite)
-              shouldShowEmailModal.value = !result;
+              isWalletApprovedFlag.value = result;
             });
+
+        }
+
+        if (!newValue) {
+          isWalletApprovedFlag.value = false;
         }
       }
     }   
@@ -181,6 +219,7 @@ export default defineComponent({
     return {
       windowWidth,
       isConnected,
+      isWalletApprovedFlag,
       getWalletAddress,
       clearAskQuestion,
       updateMyQuestions,
