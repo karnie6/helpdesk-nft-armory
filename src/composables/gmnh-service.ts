@@ -83,7 +83,7 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
     })
 }
 
-  export async function createGMNHQuestion (img: string, title: string, description: string, walletAddr: PublicKey): Promise<IMintResult> {
+  export async function createGMNHQuestion (img: string, title: string, description: string, email: string, walletAddr: PublicKey): Promise<IMintResult> {
 
     const createQuestionUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'createQuestion';
 
@@ -91,8 +91,11 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
     data.append('file', img);
     data.append('title', title);
     data.append('description', description);
-    data.append('userWalletAddr', walletAddr.toBase58());
+    data.append('email', email);
 
+    if (walletAddr) {
+        data.append('userWalletAddr', walletAddr.toBase58());
+    }
     //TODO: ADD ERROR HANDLING
     const res = await axios.post(createQuestionUrl, data, { });
 
@@ -115,6 +118,29 @@ async function retrieveMint(mintId: string): Promise<PNFT[]> {
 
     return res.data;
   };
+
+  export async function isWalletApproved(userWalletAddress: string): Promise<boolean> {
+    /* Input: user wallet address
+       Output: boolean of whether user has been asked previously for email already
+    */
+    const isWalletApprovedUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'isWalletApproved' + `/${userWalletAddress}`;
+
+    //TODO: ADD ERROR HANDLING
+    const result = await axios.get(isWalletApprovedUrl);
+    return result.data;
+  };
+
+  export async function getQuestionEmailAddress(questionMintId: string): Promise<string> {
+    /* Input: user wallet address
+       Output: boolean of whether user has been asked previously for email already
+    */
+    const getQuestionEmailAddressUrl = DEFAULTS.GMNH_SERVICE_APP_URL + 'getGMNHUserEmail' + `/${questionMintId}`;
+
+    //TODO: ADD ERROR HANDLING
+    const result = await axios.get(getQuestionEmailAddressUrl);
+    return result.data;
+  };
+
 
 
 

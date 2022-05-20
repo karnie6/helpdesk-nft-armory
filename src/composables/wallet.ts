@@ -7,7 +7,6 @@ import { useWallet } from 'solana-wallets-vue';
 
 export default function getWallet() {
   const getWalletAddress = (): PublicKey | null => { return useWallet().publicKey.value; };
-
   const isConnected = computed(() => useWallet().connected.value);
 
   return {
