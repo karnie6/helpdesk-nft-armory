@@ -186,8 +186,7 @@ export default defineComponent({
       clearError();
     };
 
-    // --------------------------------------- prep metadata
-
+    // --------------------------------------- prep metadata    
     const generateImgQuestionForGMNHService = async () => {
       const canvas = await html2canvas(document.getElementById('canvas')!);
       return canvas.toDataURL('image/png');
@@ -230,7 +229,11 @@ export default defineComponent({
 
                 if (pinataTickets.length && pinataTickets.length == 1) {
                   questionUserIDWallet = getQuestionUserWalletId(pinataTickets[0]);
-                  notifyGMNHUser(questionUserIDWallet.toString(), emailTypeAnswered, ticketLink)
+                  getGMNHUserEmailAddress(questionUserIDWallet).then(async (userEmailAddress) =>
+                       {
+                         notifyGMNHUser(userEmailAddress, emailTypeAnswered, ticketLink);
+                       }
+                  )
               }
             }) 
       
@@ -263,8 +266,12 @@ export default defineComponent({
 
         if (typeof userWalletId != 'undefined' && typeof props.questionID != 'undefined'){
             let ticketLink = formatTicketDetailLink(props.questionID, DEFAULTS.APP_URL)
-            notifyGMNHUser(userWalletId, emailTypeResponder, ticketLink);
-        }else{
+            getGMNHUserEmailAddress(userWalletId).then(async (userEmailAddress) =>
+                       {
+                         notifyGMNHUser(userEmailAddress, emailTypeAnswered, ticketLink);
+                       }
+            )
+        } else{
         }
       
     }

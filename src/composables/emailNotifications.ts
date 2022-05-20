@@ -11,7 +11,6 @@ export const emailTypeAnswered = 'QuestionAnswered';
 export const emailTypeAsked = 'QuestionAsked';
 export const emailTypeSignUp = 'UserSignUp';
 
-
 export function sendEmail(userEmailAddress: string, emailType: string, questionLink: string) {
   /* Initialize message and send specified email using emailjs
      Input:
@@ -55,7 +54,6 @@ export function sendEmail(userEmailAddress: string, emailType: string, questionL
     };
   }
 
-
   emailjs.send(emailjsServiceId, emailjsTemplateId, templateParams, emailjsUserId)
     .then(function (response) {
     }, function (error) {
@@ -64,3 +62,29 @@ export function sendEmail(userEmailAddress: string, emailType: string, questionL
 
 
 }
+
+
+export async function notifyGMNHUser(userEmailAddress: string, emailType: string, questionLink: string){
+    /* Lookup a GMNHUser's email address in airtable & send specified email type
+       Input: 
+          userEmailAddress --> user's email address
+          emailType --> type of email to send (tied to template)
+          questionLink --> /question/ link
+  
+    */
+
+       try {
+              
+            if (userEmailAddress){
+                sendEmail(userEmailAddress, emailType, questionLink)
+            }
+        } 
+  
+        catch (err) {
+            console.log("Error occurred when trying to add user info to airtable: ", err);
+        }
+  
+      
+      return;
+}
+  
