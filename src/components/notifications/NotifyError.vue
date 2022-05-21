@@ -1,6 +1,6 @@
 <template>
   <div class="nes-text is-error">
-    <slot />
+  <!--  <slot /> -->
   </div>
 </template>
 

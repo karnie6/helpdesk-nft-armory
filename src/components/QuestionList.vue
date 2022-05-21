@@ -37,7 +37,7 @@
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}
               <span><a :href="`/question/${readMintId(n)}`" target="_blank"><img width=20 style="display: inline" src="copy_link.png"/></a></span>
             </div>
-            <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div>
+         <!--   <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div> -->
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
             
             <div v-if="!areAnswersLoading">
@@ -71,6 +71,7 @@ import { PNFT } from '@/common/helpers/types';
 import QuestionItem from '@/components/QuestionItem.vue';
 import * as pnftInteractions from '@/composables/pnftInteractions'
 import { getOpenQuestionsFromGMNH, getAnsweredQuestionsFromGMNH, getMyQuestionsFromGMNH, retrieveAnswersFromGMNH} from '@/composables/gmnh-service';
+import {isWalletApproved} from '@/composables/gmnh-service'
 
 const { isConnected, getWalletAddress } = getWallet();
 const clearAskQuestion = ref<Boolean>(false);
@@ -78,6 +79,7 @@ const answersToQuestion = ref<PNFT[]>([]); //answer(s) to one question
 const myQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const openQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
 const answeredQuestions = ref<PNFT[]>([]); // this is everything fetched in mem
+const isWalletApprovedFlag = ref<Boolean>(false);
 
 export default defineComponent({
   data() {
@@ -133,7 +135,24 @@ export default defineComponent({
         }
       }
     },
-   
+    isConnected: {
+      immediate: true,
+      deep: true,
+      handler(newValue, oldValue) {
+        if (newValue && isConnected) {
+            
+            isWalletApproved(getWalletAddress()!.toBase58()).
+            then(async (result) => {
+              isWalletApprovedFlag.value = result;
+            });
+
+        }
+
+        if (!newValue) {
+          isWalletApprovedFlag.value = false;
+        }
+      }
+    } 
   },
   components: {
         QuestionItem, Tabs, Tab, IWantUrNFTForm
@@ -213,6 +232,7 @@ export default defineComponent({
     }
 
     return {
+      isWalletApprovedFlag,
       myQuestionList: myQuestions,
       openQuestionList: openQuestions,
       answeredQuestions: answeredQuestions,
