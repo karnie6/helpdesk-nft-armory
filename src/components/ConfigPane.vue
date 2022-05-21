@@ -35,9 +35,8 @@ const walletOptions = {
     wallets: [
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter({ network: WalletAdapterNetwork.Testnet}),
-    ],
-    autoConnect: true,
-  }
+    ]
+}
 
 export default defineComponent({
   components: {
