@@ -37,8 +37,9 @@
         <tabs @tabChanged="tabChanged">
           <tab title="Ask a Crypto Question" >
                   <section class="mt-3">
-                    <div v-if="clearAskQuestion" class="wallet-text">Ask any crypto question you have and get a high-quality response from our community of crypto experts emailed back to you ASAP (often in less than a hour)</div>
-                    <div v-if="clearAskQuestion" class="wallet-text">If you're brave, connect your wallet and earn a NFT commemorating your question!</div>
+                    <div v-if="clearAskQuestion" class="wallet-text">Step 1: Shoot your shot and ask us any crypto question.
+                    <div v-if="clearAskQuestion" class="wallet-text">Step 2: Sit back and our community of crypto experts will get back to you in minutes!
+                    <div v-if="clearAskQuestion" class="wallet-text">If you're feeling brave, connect your Solana wallet and earn a NFT for your question (it just might be worth something one day!)</div>
                     <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion"/>
                   </section>
                <!--   <section v-else class="gmnh-wallet-center">
