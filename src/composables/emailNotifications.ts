@@ -38,10 +38,10 @@ export function sendEmail(userEmailAddress: string, emailType: string, questionL
   }
   else if (emailType == 'QuestionAnswered') {
     var templateParams = {
-      header: 'GMNH: Your question was answered on GMNH',
+      header: 'Yay! Your question was answered by GMneedhelp',
       from_email: gmnhEmailHandle,
       to_email: userEmailAddress,
-      message: `Your question was answered on GMNH! Check out the answer here: ${questionLink}`
+      message: `Check out our community's response to your question: ${questionLink}`
     };
   }
   // emailType == UserSignUp

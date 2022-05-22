@@ -11,12 +11,12 @@
                 <div class="gmnh-tab-content-status">{{readTicketName(a)}}</div>
               </div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->
-            <div v-if="!isConnected" style="margin: 0 auto;">
+       <!--     <div v-if="!isConnected" style="margin: 0 auto;">
                     <hr style="border: 5px solid #219653;"/>
                     <span class="wallet-text" style="justify-content: center; display: flex; margin-top: 16px;">Connect your Solana wallet to answer this question!</span>
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
-            </div> 
-            <div v-else-if="needsToBeAnswered(n)">
+            </div> -->
+            <div v-if="needsToBeAnswered(n)">
               <IWantUrNFTForm :questionID="getQuestionId(n)" :hash="getIPFSHash(n)" :fromQuestionDetail="true"/>
             </div>
       </div>
