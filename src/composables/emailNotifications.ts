@@ -41,7 +41,7 @@ export function sendEmail(userEmailAddress: string, emailType: string, questionL
       header: 'Yay! Your question was answered by GMneedhelp',
       from_email: gmnhEmailHandle,
       to_email: userEmailAddress,
-      message: `Check out our community's response for your question: ${questionLink}`
+      message: `Check out our community's response to your question: ${questionLink}`
     };
   }
   // emailType == UserSignUp
