@@ -1,7 +1,7 @@
 <template>
   <div>
       <div class="flex mt-10 text-white" style="background: #343A3F; ">
-      <form v-if="isQuestion && !isLoading" @submit.prevent="createTicket" class="flex-grow">
+      <form v-if="isQuestion && !isLoading" @submit.prevent="createTicket">
 
       <!--  <input focus-visible type="text" id="emailAddress" maxlength="255" placeholder="Enter email address..." class="nes-input gmnh-question" v-model="emailAddress" /> -->
         <input for="email" focus-visible type="email" maxlength="255" placeholder="What's your email?" class="nes-input gmnh-question" v-model="emailAddress" />
@@ -42,7 +42,7 @@
 
        <!--notifications-->
     
-    <div class="flex-grow">
+    <div v-if="isLoading" class="flex-grow">
       <StdNotifications v-if="!mintResult" :is-question="isQuestion" :is-connected="isConnected" :is-loading="isLoading" :is-created="isCreated" />
       <StdNotifications v-else :is-question="isQuestion" :is-connected="isConnected" :is-loading="isLoading" :is-created="isCreated" :mint-id="mintResult.mint"  />
     </div>

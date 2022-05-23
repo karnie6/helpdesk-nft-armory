@@ -42,6 +42,7 @@ export default defineComponent({
   components: {
     WalletMultiButton
   },
+  autoconnect: false,
   setup() {
 
     
