@@ -335,11 +335,14 @@ a.phantom-link {
 
 .instruction-text {
   color: #FFFFFF;
+  margin-bottom: 0em;
+  font-size: 0.80em;
 }
 
 .instruction-header {
-  font-size: 1.25em;
+  font-size: 1.33em;
   margin-bottom: 0.5em;
+  margin-top: 0.5em;
 }
 
 </style>
