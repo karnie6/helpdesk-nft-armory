@@ -4,10 +4,9 @@
       <form v-if="isQuestion && !isLoading" @submit.prevent="createTicket">
 
       <!--  <input focus-visible type="text" id="emailAddress" maxlength="255" placeholder="Enter email address..." class="nes-input gmnh-question" v-model="emailAddress" /> -->
-        <input for="email" focus-visible type="email" maxlength="255" placeholder="What's your email?" class="nes-input gmnh-question" v-model="emailAddress" />
         <input type="text" id="nftName" maxlength="255" placeholder="What's your question?" class="nes-input gmnh-question" v-model="nftName" />
-
-        <div><textarea type="text" id="description" placeholder="Add context/background..." class="nes-input gmnh-description" v-model="description" /></div>
+        <textarea type="text" id="description" placeholder="Provide any context that would help us better answer it.." class="nes-input gmnh-description" v-model="description" />
+        <input for="email" focus-visible type="email" maxlength="255" placeholder="Add your email to get notified when your answer is ready!" class="nes-input gmnh-question" v-model="emailAddress" />
 
         <button
           class="gmnh-question-submit"
@@ -58,15 +57,14 @@
     </NotifySuccess> -->
 
       <div v-if="isQuestion && !isLoading" class="display display-canvas" id="canvas" :style="{ fontSize: `${textSize}px`} ">
-        <p>{{ nftName.substring(0,254) }}</p>
+        <p>{{ nftName.length > 0 ? nftName.substring(0,254) : 'Your NFT'}}</p>
       </div>
       <div v-else-if="!fromQuestionDetail && isWalletApprovedFlag" class=" display-answer display-canvas" v-bind:id="canvasIdentifier" :style="{ fontSize: `${textSize}px`} ">
-        <p>{{ nftName.substring(0,254) }}</p>
+        <p>{{ nftName.length > 0 ? nftName.substring(0,254) : 'Your NFT' }}</p>
       </div>
       <div v-else-if="isWalletApprovedFlag" class="display-answer-detail display-canvas" v-bind:id="canvasIdentifier" :style="{ fontSize: `${textSize}px`} ">
-        <p>{{ nftName.substring(0,254) }}</p>
-      </div>
-   
+        <p>{{ nftName.length > 0 ? nftName.substring(0,254) : 'Your NFT' }}</p>
+      </div>   
   </div>
   </div>
 </template>
@@ -201,6 +199,7 @@ export default defineComponent({
     const createTicket = async () => {
       //switch to loading view
       reset();
+      emit('submitted');
       
       //create NFT
       const img = await generateImgQuestionForGMNHService();      
@@ -369,8 +368,7 @@ flex-direction: row;
 align-items: flex-start;
 padding: 16px;
 
-position: static;
-width: 816px;
+width: 700px;
 height: 57px;
 left: 0px;
 top: 0px;
@@ -395,8 +393,7 @@ flex-direction: row;
 align-items: flex-start;
 padding: 16px;
 
-position: static;
-width: 816px;
+width: 700px;
 height: 131px;
 left: 0px;
 top: 0px;
