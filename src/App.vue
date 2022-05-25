@@ -35,12 +35,39 @@
       <!-- tabs -->
       <div v-if="$route.name !== 'Ticket Details' && isWalletApprovedFlag" class="container mt-3">
         <tabs @tabChanged="tabChanged">
-          <tab title="Ask a Crypto Question" >
+          <tab title="Ask Question" >
+      <div v-if="showInstructions" class="row g-4 row-cols-1 row-cols-lg-3">
+      <div class="col d-flex align-items-start instruction-text">
+      <!--  <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
+          <img style="display: inline;" src="one.png"/>
+        </div> -->
+        <div>
+          <h5>1. Shoot your shot</h5>
+          <p>Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start instruction-text">
+        <!-- <div class="icon-square bg-light text-dark d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+          <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
+        </div> -->
+        <div>
+          <h5>2. Let us do the heavy lifting..</h5>
+          <p>We'll notify you via email when a personalized answer from our community of crypto experts is ready (often in less than 30 mins)!</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start instruction-text">
+       <!-- <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
+          <img style="display: inline" height="10em" src="number1.svg"/>
+        </div> -->
+        <div>
+          <h5>3. Get a free NFT (optional)</h5>
+
+          <p>Connect your Solana wallet above to commemorate your question by minting a free NFT.</p>
+        </div>
+      </div>
+    </div>
                   <section class="mt-3">
-                    <div class="wallet-text">Step 1: Shoot your shot and ask us any crypto question.</div>
-                    <div class="wallet-text">Step 2: Sit back and our community of crypto experts will get back to you in minutes!</div>
-                    <div class="wallet-text">If you're feeling brave, connect your Solana wallet and earn a NFT for your question (it just might be worth something one day!)</div>
-                    <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion"/>
+                    <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion" @submitted="submitted"/>
                   </section>
                <!--   <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
@@ -67,7 +94,7 @@
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
             </section>
           </tab>
-          <tab title="See Answered Questions">
+          <tab title="See Answers">
             <section>
               <QuestionList tabType="answeredQuestions" v-bind:updateAnsweredQuestions="updateAnsweredQuestions"/>
             </section>
@@ -80,20 +107,46 @@
       </div>
       <div v-else-if="$route.name !== 'Ticket Details' && !isWalletApprovedFlag" class="container mt-3">
         <tabs @tabChanged="tabChanged">
-          <tab title="Ask a Crypto Question" >
-                  <section class="mt-3">
-                    <div class="wallet-text">Step 1: Shoot your shot and ask us any crypto question.</div>
-                    <div class="wallet-text">Step 2: Sit back and our community of crypto experts will get back to you in minutes!</div>
-                    <div class="wallet-text">If you're feeling brave, connect your Solana wallet and earn a NFT for your question (it just might be worth something one day!)</div>
+          <tab title="Ask Question" >
+           <div v-if="showInstructions" class="row g-4 row-cols-1 row-cols-lg-3">
+      <div class="col d-flex align-items-start instruction-text">
+      <!--  <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
+          <img style="display: inline;" src="one.png"/>
+        </div> -->
+        <div>
+          <h5>1. Shoot your shot</h5>
+          <p>Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start instruction-text">
+        <!-- <div class="icon-square bg-light text-dark d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
+          <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
+        </div> -->
+        <div>
+          <h5>2. Let us do the heavy lifting..</h5>
+          <p>We'll notify you via email when a personalized answer from our community of crypto experts is ready (often in less than 30 mins)!</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start instruction-text">
+       <!-- <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
+          <img style="display: inline" height="10em" src="number1.svg"/>
+        </div> -->
+        <div>
+          <h5>3. Get a free NFT (optional)</h5>
 
-                    <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion"/>
+          <p>Connect your Solana wallet above to commemorate your question by minting a free NFT.</p>
+        </div>
+      </div>
+    </div>
+                  <section class="mt-3">
+                    <IWantUrNFTForm :is-question=true v-bind:clearAskQuestion="clearAskQuestion" @submitted="submitted"/>
                   </section>
                <!--   <section v-else class="gmnh-wallet-center">
                     <span class="wallet-text">Connect your Solana wallet to ask a question!</span>
                     <span class="no-wallet-text">Don't have a wallet? Download&nbsp;<a class="phantom-link" target="_blank" href="https://phantom.app/">Phantom</a>.</span>
                   </section> -->
           </tab>
-          <tab title="See Answered Questions">
+          <tab title="See Answers">
             <section>
               <QuestionList tabType="answeredQuestions" v-bind:updateAnsweredQuestions="updateAnsweredQuestions"/>
             </section>
@@ -136,6 +189,7 @@ const updateOpenQuestions = ref<Boolean>(false);
 const updateAnsweredQuestions = ref<Boolean>(false);
 const shouldShowEmailModal = ref<Boolean>(false);
 const emailSubmitted = ref<Boolean>(false);
+const showInstructions = ref<Boolean>(true);
 
 const { isConnected, getWalletAddress } = getWallet();
 
@@ -145,12 +199,16 @@ export default defineComponent({
   components: { TheFooter, TheLogo, ConfigPane, TheNavBar, Tab, Tabs, IWantUrNFTForm, QuestionList, TicketDetail, TheMobileCover},
 
   methods: {
+    submitted: function() {
+        showInstructions.value = false;
+    },
     tabChanged: function (index:Number) {
       if (index == 0) {
         clearAskQuestion.value = true;
         updateMyQuestions.value = false;
         updateOpenQuestions.value = false;
         updateAnsweredQuestions.value = false;
+        showInstructions.value = true;
       }
       if (index == 1) {
         //since only two tabs when
@@ -225,6 +283,7 @@ export default defineComponent({
       getWalletAddress,
       clearAskQuestion,
       updateMyQuestions,
+      showInstructions,
       updateOpenQuestions,
       updateAnsweredQuestions,
       emailAddress,
@@ -272,6 +331,10 @@ a.phantom-link {
   width: 400px; 
   padding: 5px;
 
+}
+
+.instruction-text {
+  color: #FFFFFF;
 }
 
 </style>
