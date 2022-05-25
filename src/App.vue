@@ -42,7 +42,7 @@
           <img style="display: inline;" src="one.png"/>
         </div> -->
         <div>
-          <h5>1. Shoot your shot</h5>
+          <h5 class="instruction-header">1. Shoot your shot</h5>
           <p>Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
         </div>
       </div>
@@ -51,8 +51,8 @@
           <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
         </div> -->
         <div>
-          <h5>2. Let us do the heavy lifting..</h5>
-          <p>We'll notify you via email when a personalized answer from our community of crypto experts is ready (often in less than 30 mins)!</p>
+          <h5 class="instruction-header">2. Let us do the heavy lifting..</h5>
+          <p>We'll notify you via email with a personalized answer from our community of crypto experts (often in less than 30 mins)!</p>
         </div>
       </div>
       <div class="col d-flex align-items-start instruction-text">
@@ -60,7 +60,7 @@
           <img style="display: inline" height="10em" src="number1.svg"/>
         </div> -->
         <div>
-          <h5>3. Get a free NFT (optional)</h5>
+          <h5 class="instruction-header">3. Get a free NFT (optional)</h5>
 
           <p>Connect your Solana wallet above to commemorate your question by minting a free NFT.</p>
         </div>
@@ -114,7 +114,7 @@
           <img style="display: inline;" src="one.png"/>
         </div> -->
         <div>
-          <h5>1. Shoot your shot</h5>
+          <h5 class="instruction-header">1. Shoot your shot</h5>
           <p>Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
         </div>
       </div>
@@ -123,8 +123,8 @@
           <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
         </div> -->
         <div>
-          <h5>2. Let us do the heavy lifting..</h5>
-          <p>We'll notify you via email when a personalized answer from our community of crypto experts is ready (often in less than 30 mins)!</p>
+          <h5 class="instruction-header">2. Let us do the heavy lifting..</h5>
+          <p>We'll notify you via email with a personalized answer from our community of crypto experts (often in less than 30 mins)!</p>
         </div>
       </div>
       <div class="col d-flex align-items-start instruction-text">
@@ -132,7 +132,7 @@
           <img style="display: inline" height="10em" src="number1.svg"/>
         </div> -->
         <div>
-          <h5>3. Get a free NFT (optional)</h5>
+          <h5 class="instruction-header">3. Get a free NFT (optional)</h5>
 
           <p>Connect your Solana wallet above to commemorate your question by minting a free NFT.</p>
         </div>
@@ -335,6 +335,10 @@ a.phantom-link {
 
 .instruction-text {
   color: #FFFFFF;
+}
+
+.instruction-header {
+  font-size: 1.25em;
 }
 
 </style>
