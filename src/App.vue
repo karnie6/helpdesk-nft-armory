@@ -340,7 +340,7 @@ a.phantom-link {
 }
 
 .instruction-header {
-  font-size: 1.25em;
+  font-size: 1.33em;
   margin-bottom: 0.5em;
   margin-top: 0.5em;
 }
