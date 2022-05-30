@@ -471,8 +471,7 @@ width: 169px;
 height: 47px;
 left: 0px;
 top: 73px;
-
-background: #082CAB;
+background: rgb(79, 70, 229);
 /* Gray-90 */
 box-sizing: border-box;
 border-radius: 4px;
@@ -497,7 +496,7 @@ height: 47px;
 left: 0px;
 top: 73px;
 
-background: #082CAB;
+background: rgb(79, 70, 229);
 /* Gray-90 */
 box-sizing: border-box;
 border-radius: 4px;
@@ -515,7 +514,7 @@ margin: 16px;
 }
 
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #f2f4f8;
+  color: #878d96;
   opacity: 1; /* Firefox */
 }
 </style>

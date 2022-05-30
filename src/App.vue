@@ -37,32 +37,32 @@
         <tabs @tabChanged="tabChanged">
           <tab title="Ask Question" >
       <div v-if="showInstructions" class="row g-4 row-cols-1 row-cols-lg-3">
-      <div class="col d-flex align-items-start instruction-text">
+      <div class="col d-flex align-items-start instruction">
       <!--  <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
           <img style="display: inline;" src="one.png"/>
         </div> -->
         <div>
-          <h5 class="instruction-header">1. Shoot your shot</h5>
-          <p>Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
+          <h4 class="instruction-header">1. Ask for help</h4>
+          <p class="instruction-text">Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
         </div>
       </div>
-      <div class="col d-flex align-items-start instruction-text">
+      <div class="col d-flex align-items-start instruction">
         <!-- <div class="icon-square bg-light text-dark d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
           <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
         </div> -->
         <div>
-          <h5 class="instruction-header">2. Let us do the heavy lifting..</h5>
-          <p>We'll notify you via email with a personalized answer from our community of crypto experts (often in less than 30 mins)!</p>
+          <h4 class="instruction-header">2. Get an answer in your inbox</h4>
+          <p class="instruction-text">We'll notify you via email with a personalized answer from our community of crypto experts (often in less than 1 hr).</p>
         </div>
       </div>
-      <div class="col d-flex align-items-start instruction-text">
+      <div class="col d-flex align-items-start instruction">
        <!-- <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
           <img style="display: inline" height="10em" src="number1.svg"/>
         </div> -->
         <div>
-          <h5 class="instruction-header">3. Get a free NFT (optional)</h5>
+          <h4 class="instruction-header">3. Mint a free NFT (optional)</h4>
 
-          <p>Connect your Solana wallet above to commemorate your question by minting a free NFT.</p>
+          <p class="instruction-text">Commemorate your question and earn a NFT by connecting your Solana wallet above.</p>
         </div>
       </div>
     </div>
@@ -109,32 +109,32 @@
         <tabs @tabChanged="tabChanged">
           <tab title="Ask Question" >
            <div v-if="showInstructions" class="row g-4 row-cols-1 row-cols-lg-3">
-      <div class="col d-flex align-items-start instruction-text">
+      <div class="col d-flex align-items-start instruction">
       <!--  <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
           <img style="display: inline;" src="one.png"/>
         </div> -->
         <div>
-          <h5 class="instruction-header">1. Shoot your shot</h5>
-          <p>Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
+          <h4 class="instruction-header">1. Ask for help</h4>
+          <p class="instruction-text">Ask us any crypto/web3 question (concepts, recent news, tech support, you name it)!</p>
         </div>
       </div>
-      <div class="col d-flex align-items-start instruction-text">
+      <div class="col d-flex align-items-start instruction">
         <!-- <div class="icon-square bg-light text-dark d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
           <svg class="bi" width="1em" height="1em"><use xlink:href="#cpu-fill"></use></svg>
         </div> -->
         <div>
-          <h5 class="instruction-header">2. Let us do the heavy lifting..</h5>
-          <p>We'll notify you via email with a personalized answer from our community of crypto experts (often in less than 30 mins)!</p>
+          <h4 class="instruction-header">2. Get an answer in your inbox</h4>
+          <p class="instruction-text">We'll notify you via email with a personalized answer from our community of crypto experts (often in less than 1 hr).</p>
         </div>
       </div>
-      <div class="col d-flex align-items-start instruction-text">
+      <div class="col d-flex align-items-start instruction">
        <!-- <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 me-3">
           <img style="display: inline" height="10em" src="number1.svg"/>
         </div> -->
         <div>
-          <h5 class="instruction-header">3. Get a free NFT (optional)</h5>
+          <h4 class="instruction-header">3. Mint a free NFT (optional)</h4>
 
-          <p>Connect your Solana wallet above to commemorate your question by minting a free NFT.</p>
+          <p class="instruction-text">Commemorate your question and earn a NFT by connecting your Solana wallet above.</p>
         </div>
       </div>
     </div>
@@ -333,16 +333,20 @@ a.phantom-link {
 
 }
 
-.instruction-text {
+.instruction {
   color: #FFFFFF;
   margin-bottom: 0em;
-  font-size: 0.80em;
 }
 
 .instruction-header {
-  font-size: 1.33em;
+  font-size: 20px;
+  font-weight: bold;
   margin-bottom: 0.5em;
   margin-top: 0.5em;
+}
+
+.instruction-text {
+  font-size: 14px;
 }
 
 </style>
