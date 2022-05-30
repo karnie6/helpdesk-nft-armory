@@ -35,7 +35,7 @@
       <tab v-for="(n, idx) in answeredQuestions" :key="n.id" :id="idx" :title='readTicketName(n)' :mintId='readMintId(n)'>     
         <div class="gmnh-tab-content">
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}
-              <span><a :href="`/question/${readMintId(n)}`" target="_blank"><img width=20 style="display: inline" src="copy_link.png"/></a></span>
+              <!-- <span><a :href="`/question/${readMintId(n)}`" target="_blank"><img width=20 style="display: inline" src="copy_link.png"/></a></span> -->
             </div>
          <!--   <div class="gmnh-tab-content-byline">Asked {{getUserName(n)}} {{getFormattedDatePinned(n)}}</div> -->
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
