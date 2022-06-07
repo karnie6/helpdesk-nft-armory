@@ -1,13 +1,13 @@
 <template>
-    <div class="question-nav"><a href="/" class="gmnh-back">&laquo; Back</a></div> 
+    <div class="question-nav"><a href="/" class="gmnh-back">&laquo; Back to Crypto Concierge</a></div> 
     <div v-if="doesQuestionExist && !errorFinding" direction="vertical" class="gmnh-detail">
       <div v-for="(n, idx) in question" :key="n.id" :id="idx">     
             <div class="gmnh-tab-content-title">{{readTicketName(n)}}</div>
             <div class="gmnh-tab-content-byline">Asked on {{getFormattedDatePinned(n)}}</div>
             <div class="gmnh-tab-content-description">{{getDescription(n)}}</div>
-
+            <a href="https://twitter.com/share?text=I%20just%20got%20my%20crypto%20question%20answered%20by%20@GMneedhelp's%20Crypto%20Concierge:" class="twitter-share-button" data-size="large" data-show-count="false">Tweet</a>
             <div v-for="(a, idx) in answersToQuestion" :key="a.id" :id="idx">
-                <hr style="border: 5px solid #219653;"/>
+                <hr style="border: 5px solid #219653; margin-top: 10px;"/>
                 <div class="gmnh-tab-content-status">{{readTicketName(a)}}</div>
               </div>
 <!--            <img class="gmnh-tab-content-nft" v-bind:src="getImageUrl(n)"/> -->

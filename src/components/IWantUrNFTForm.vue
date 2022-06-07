@@ -31,7 +31,7 @@
         <button v-else
           class="gmnh-answer-submit gmnh-answer-submit-detail"
           :class="{ 'is-disabled': isLoading || !isConnected || isWalletApprovedFlag }"
-          :disabled="isLoading || !isConnected || isWalletApprovedFlag"
+          :disabled="isLoading || !isConnected || !isWalletApprovedFlag"
           type="submit"
         >
           Answer Question
